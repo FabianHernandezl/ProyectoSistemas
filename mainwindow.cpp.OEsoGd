@@ -1,0 +1,79 @@
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include <QScrollBar>
+#include <QPalette>
+#include <QPixmap>
+#include <QPainter> // Incluye QPainter para dibujar
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+
+    // ---- Imagen de fondo (carga inicial) ----
+    background_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources.qrc/fondo/factory2_background.png");
+
+    if (background_.isNull()) {
+        qDebug() << "⚠️ No se pudo cargar el fondo. Revisa la ruta o el nombre de la imagen.";
+    }
+
+    conveyorBelt_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources.qrc/cinta_transportadora/conveyor_belt.png");
+    if (conveyorBelt_.isNull()) {
+        qDebug() << "⚠️ No se pudo cargar la cinta transportadora. Revisa la ruta o el nombre de la imagen.";
+    }
+
+    // ---- Conexión del controlador con el log ----
+    connect(&controller_, &ProductionController::logMessage, this, [this](const QString &msg) {
+        ui->txtLog->appendPlainText(msg);
+        ui->txtLog->verticalScrollBar()->setValue(ui->txtLog->verticalScrollBar()->maximum());
+    });
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);  // Crea un pintor para dibujar en el widget
+
+    // Dibuja el fondo
+    if (!background_.isNull()) {
+        painter.drawPixmap(0, 0, width(), height(), background_);
+    }
+
+    // Dibuja la cinta transportadora ajustada
+    if (!conveyorBelt_.isNull()) {
+        // Hacemos la imagen un poco más pequeña y la mantenemos larga
+        int beltWidth = conveyorBelt_.width() * 1.0;  // Reducimos el ancho (pero manteniendo el largo)
+        int beltHeight = conveyorBelt_.height() * 0.25;  // Reducimos un poco la altura
+
+        // Escalamos la imagen de la cinta transportadora
+        QPixmap stretchedBelt = conveyorBelt_.scaled(beltWidth, beltHeight, Qt::IgnoreAspectRatio);
+
+        // Dibuja la cinta transportadora ajustada: más a la izquierda y 5 cm más arriba
+        painter.drawPixmap(-80, height() - beltHeight - 200, stretchedBelt);  // Desplazada a la izquierda y 5 cm más arriba
+    }
+
+    // Llama a la clase base para cualquier funcionalidad adicional (si es necesario)
+    QMainWindow::paintEvent(event);
+}
+
+
+
+
+
+
+
+
+void MainWindow::on_btnStart_clicked()
+{
+    controller_.startProduction();
+}
+
+void MainWindow::on_btnStop_clicked()
+{
+    controller_.stopProduction();
+}
