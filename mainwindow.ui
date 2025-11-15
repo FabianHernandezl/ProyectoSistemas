@@ -13,14 +13,17 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPlainTextEdit" name="txtLog">
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>600</y>
+      <y>630</y>
       <width>291</width>
-      <height>201</height>
+      <height>111</height>
      </rect>
     </property>
    </widget>
@@ -30,8 +33,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1290</x>
-      <y>610</y>
+      <x>1400</x>
+      <y>640</y>
       <width>88</width>
       <height>26</height>
      </rect>
@@ -43,8 +46,8 @@
    <widget class="QPushButton" name="btnStop">
     <property name="geometry">
      <rect>
-      <x>1290</x>
-      <y>750</y>
+      <x>1400</x>
+      <y>740</y>
       <width>88</width>
       <height>26</height>
      </rect>
@@ -57,19 +60,19 @@
     <property name="geometry">
      <rect>
       <x>480</x>
-      <y>610</y>
-      <width>256</width>
-      <height>192</height>
+      <y>631</y>
+      <width>391</width>
+      <height>111</height>
      </rect>
     </property>
    </widget>
    <widget class="QProgressBar" name="barProductos">
     <property name="geometry">
      <rect>
-      <x>830</x>
+      <x>1160</x>
       <y>660</y>
-      <width>118</width>
-      <height>23</height>
+      <width>131</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="value">
@@ -79,10 +82,10 @@
    <widget class="QProgressBar" name="barRecursos">
     <property name="geometry">
      <rect>
-      <x>830</x>
-      <y>740</y>
-      <width>118</width>
-      <height>23</height>
+      <x>940</x>
+      <y>660</y>
+      <width>141</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="value">
@@ -92,8 +95,8 @@
    <widget class="QLabel" name="lblProcesados">
     <property name="geometry">
      <rect>
-      <x>840</x>
-      <y>610</y>
+      <x>1180</x>
+      <y>640</y>
       <width>66</width>
       <height>18</height>
      </rect>
@@ -105,14 +108,46 @@
    <widget class="QLabel" name="lblRecursos">
     <property name="geometry">
      <rect>
-      <x>840</x>
-      <y>710</y>
+      <x>970</x>
+      <y>640</y>
       <width>66</width>
       <height>18</height>
      </rect>
     </property>
     <property name="text">
      <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>630</y>
+      <width>20</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>610</y>
+      <width>118</width>
+      <height>3</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
     </property>
    </widget>
   </widget>

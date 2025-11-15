@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QTableWidgetItem>
+#include "animationmanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -153,8 +154,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
     // *** CAJA 1 ***
     //
     if (!box_.isNull()) {
-        QPixmap scaled = box_.scaled(150, 150, Qt::KeepAspectRatio);
-        painter.drawPixmap(190, beltY - 20, scaled);
+        QPixmap scaled = box_.scaled(200, 200, Qt::KeepAspectRatio);
+        painter.drawPixmap(250, beltY - 20, scaled);
     }
 
     //
@@ -162,7 +163,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     //
     if (!box2_.isNull()) {
         QPixmap scaled = box2_.scaled(150, 150, Qt::KeepAspectRatio);
-        painter.drawPixmap(width() - 340, beltY + 50, scaled);
+        painter.drawPixmap(width() - 480, beltY + 50, scaled);
     }
 
     QMainWindow::paintEvent(event);
@@ -194,6 +195,18 @@ void MainWindow::updateProcessedCount(int v)
 void MainWindow::updateActiveWorkers(int v)
 {
     ui->barRecursos->setValue(v);
+}
+
+//
+// -------------------------
+//  ACTUALIZAR ANIMACIONES
+// -------------------------
+void MainWindow::updateAnimations(int animationState)
+{
+    // Aquí puedes actualizar las animaciones según el estado
+    // Por ejemplo, si animationState es 1, comienza una animación.
+    // Llama a tu AnimationManager aquí para cambiar el estado de la animación según lo necesites.
+    // Esto es solo un ejemplo y depende de la lógica de tu AnimationManager.
 }
 
 //
