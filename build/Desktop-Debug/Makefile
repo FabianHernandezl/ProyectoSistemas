@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = IF4001_ProductionLine1.0.0
-DISTDIR = /home/zateal/IF4001_ProductionLine/build/Desktop-Debug/.tmp/IF4001_ProductionLine1.0.0
+DISTDIR = /home/fahern/Descargas/IF4001_ProductionLine/build/Desktop-Debug/.tmp/IF4001_ProductionLine1.0.0
 LINK          = g++
 LFLAGS        = 
 LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
@@ -52,17 +52,20 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../buffer.cpp \
+SOURCES       = ../../animationmanager.cpp \
+		../../buffer.cpp \
 		../../main.cpp \
 		../../mainwindow.cpp \
 		../../ownershipguard.cpp \
 		../../product.cpp \
 		../../productioncontroller.cpp \
 		../../producttracker.cpp \
-		../../station.cpp moc_mainwindow.cpp \
+		../../station.cpp moc_animationmanager.cpp \
+		moc_mainwindow.cpp \
 		moc_productioncontroller.cpp \
 		moc_station.cpp
-OBJECTS       = buffer.o \
+OBJECTS       = animationmanager.o \
+		buffer.o \
 		main.o \
 		mainwindow.o \
 		ownershipguard.o \
@@ -70,6 +73,7 @@ OBJECTS       = buffer.o \
 		productioncontroller.o \
 		producttracker.o \
 		station.o \
+		moc_animationmanager.o \
 		moc_mainwindow.o \
 		moc_productioncontroller.o \
 		moc_station.o
@@ -151,13 +155,15 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../../../../IF4001_ProductionLine.pro ../../buffer.h \
+		../../../../IF4001_ProductionLine.pro ../../animationmanager.h \
+		../../buffer.h \
 		../../mainwindow.h \
 		../../ownershipguard.h \
 		../../product.h \
 		../../productioncontroller.h \
 		../../producttracker.h \
-		../../station.h ../../buffer.cpp \
+		../../station.h ../../animationmanager.cpp \
+		../../buffer.cpp \
 		../../main.cpp \
 		../../mainwindow.cpp \
 		../../ownershipguard.cpp \
@@ -350,8 +356,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../buffer.h ../../mainwindow.h ../../ownershipguard.h ../../product.h ../../productioncontroller.h ../../producttracker.h ../../station.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../buffer.cpp ../../main.cpp ../../mainwindow.cpp ../../ownershipguard.cpp ../../product.cpp ../../productioncontroller.cpp ../../producttracker.cpp ../../station.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../animationmanager.h ../../buffer.h ../../mainwindow.h ../../ownershipguard.h ../../product.h ../../productioncontroller.h ../../producttracker.h ../../station.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../animationmanager.cpp ../../buffer.cpp ../../main.cpp ../../mainwindow.cpp ../../ownershipguard.cpp ../../product.cpp ../../productioncontroller.cpp ../../producttracker.cpp ../../station.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../mainwindow.ui $(DISTDIR)/
 
 
@@ -384,9 +390,14 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++1z -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_productioncontroller.cpp moc_station.cpp
+compiler_moc_header_make_all: moc_animationmanager.cpp moc_mainwindow.cpp moc_productioncontroller.cpp moc_station.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_productioncontroller.cpp moc_station.cpp
+	-$(DEL_FILE) moc_animationmanager.cpp moc_mainwindow.cpp moc_productioncontroller.cpp moc_station.cpp
+moc_animationmanager.cpp: ../../animationmanager.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/fahern/Descargas/IF4001_ProductionLine/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/fahern/Descargas/IF4001_ProductionLine -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/14 -I/usr/include/x86_64-linux-gnu/c++/14 -I/usr/include/c++/14/backward -I/usr/lib/gcc/x86_64-linux-gnu/14/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../animationmanager.h -o moc_animationmanager.cpp
+
 moc_mainwindow.cpp: ../../mainwindow.h \
 		../../productioncontroller.h \
 		../../buffer.h \
@@ -394,7 +405,7 @@ moc_mainwindow.cpp: ../../mainwindow.h \
 		../../station.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/zateal/IF4001_ProductionLine/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/zateal/IF4001_ProductionLine -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/14 -I/usr/include/x86_64-linux-gnu/c++/14 -I/usr/include/c++/14/backward -I/usr/lib/gcc/x86_64-linux-gnu/14/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/fahern/Descargas/IF4001_ProductionLine/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/fahern/Descargas/IF4001_ProductionLine -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/14 -I/usr/include/x86_64-linux-gnu/c++/14 -I/usr/include/c++/14/backward -I/usr/lib/gcc/x86_64-linux-gnu/14/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../mainwindow.h -o moc_mainwindow.cpp
 
 moc_productioncontroller.cpp: ../../productioncontroller.h \
 		../../buffer.h \
@@ -402,14 +413,14 @@ moc_productioncontroller.cpp: ../../productioncontroller.h \
 		../../station.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/zateal/IF4001_ProductionLine/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/zateal/IF4001_ProductionLine -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/14 -I/usr/include/x86_64-linux-gnu/c++/14 -I/usr/include/c++/14/backward -I/usr/lib/gcc/x86_64-linux-gnu/14/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../productioncontroller.h -o moc_productioncontroller.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/fahern/Descargas/IF4001_ProductionLine/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/fahern/Descargas/IF4001_ProductionLine -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/14 -I/usr/include/x86_64-linux-gnu/c++/14 -I/usr/include/c++/14/backward -I/usr/lib/gcc/x86_64-linux-gnu/14/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../productioncontroller.h -o moc_productioncontroller.cpp
 
 moc_station.cpp: ../../station.h \
 		../../buffer.h \
 		../../product.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/zateal/IF4001_ProductionLine/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/zateal/IF4001_ProductionLine -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/14 -I/usr/include/x86_64-linux-gnu/c++/14 -I/usr/include/c++/14/backward -I/usr/lib/gcc/x86_64-linux-gnu/14/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../station.h -o moc_station.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/fahern/Descargas/IF4001_ProductionLine/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/fahern/Descargas/IF4001_ProductionLine -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/14 -I/usr/include/x86_64-linux-gnu/c++/14 -I/usr/include/c++/14/backward -I/usr/lib/gcc/x86_64-linux-gnu/14/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../station.h -o moc_station.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -432,6 +443,9 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
+animationmanager.o: ../../animationmanager.cpp ../../animationmanager.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o animationmanager.o ../../animationmanager.cpp
+
 buffer.o: ../../buffer.cpp ../../buffer.h \
 		../../product.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o buffer.o ../../buffer.cpp
@@ -448,7 +462,8 @@ mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		../../buffer.h \
 		../../product.h \
 		../../station.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../../animationmanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../../mainwindow.cpp
 
 ownershipguard.o: ../../ownershipguard.cpp ../../ownershipguard.h
@@ -468,8 +483,12 @@ producttracker.o: ../../producttracker.cpp ../../producttracker.h
 
 station.o: ../../station.cpp ../../station.h \
 		../../buffer.h \
-		../../product.h
+		../../product.h \
+		../../productioncontroller.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o station.o ../../station.cpp
+
+moc_animationmanager.o: moc_animationmanager.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_animationmanager.o moc_animationmanager.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

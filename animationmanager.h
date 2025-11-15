@@ -16,20 +16,25 @@ public:
 
     void startAnimations();
     void stopAnimations();
-    void updatePosition(int productId, const QPoint& newPosition);
 
-protected:
-    void paintEvent(QPainter& painter);
+    // ✔ método público para pintarse
+    void render(QPainter &painter);
 
-private:
-    QTimer *animationTimer_;
-    int animationSpeed_;  // Puedes modificar esto para hacer las animaciones más lentas o rápidas
-    QPoint productPosition_;
-    QPixmap boxPixmap_;
-    bool isAnimating_;
+signals:
+    void positionChanged(const QPoint &pos);
+
+public slots:
+    void updatePosition(int productId, const QPoint &newPosition);
 
 private slots:
     void onAnimationFrame();
+
+private:
+    QTimer *animationTimer_;
+    int animationSpeed_;
+    QPoint productPosition_;
+    QPixmap boxPixmap_;
+    bool isAnimating_;
 };
 
 #endif // ANIMATIONMANAGER_H

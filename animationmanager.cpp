@@ -1,21 +1,22 @@
 #include "animationmanager.h"
-#include <QTimer>
-#include <QPainter>
-#include <QPixmap>
+#include <QDebug>
 
 AnimationManager::AnimationManager(QObject *parent)
     : QObject(parent),
-    animationSpeed_(50),  // 50 ms por cuadro de animación
-    isAnimating_(false)
+    animationSpeed_(50),
+    isAnimating_(false),
+    productPosition_(0, 500)  // posición inicial visible
 {
     animationTimer_ = new QTimer(this);
-    connect(animationTimer_, &QTimer::timeout, this, &AnimationManager::onAnimationFrame);
+
+    connect(animationTimer_, &QTimer::timeout,
+            this, &AnimationManager::onAnimationFrame);
+
     boxPixmap_ = QPixmap(":/resources/caja.png");
 }
 
 AnimationManager::~AnimationManager()
 {
-    delete animationTimer_;
 }
 
 void AnimationManager::startAnimations()
@@ -36,22 +37,26 @@ void AnimationManager::stopAnimations()
 
 void AnimationManager::onAnimationFrame()
 {
-    // Aquí logicas de movimiento o actualización de las posiciones
-    productPosition_ += QPoint(5, 0); // mueve la caja a la derecha por ejemplo
-    if (productPosition_.x() > 800) {
-        productPosition_.setX(0);  // Resetea la posición si sale de la pantalla
-    }
+    // movimiento simple
+    productPosition_.rx() += 5;
 
-    emit updatePosition(productPosition_);
+    if (productPosition_.x() > 1400)
+        productPosition_.setX(0);
+
+    emit positionChanged(productPosition_);
 }
 
-void AnimationManager::updatePosition(int productId, const QPoint& newPosition)
+void AnimationManager::updatePosition(int, const QPoint &newPosition)
 {
-    // Actualiza la posición del producto, por ejemplo
     productPosition_ = newPosition;
 }
 
-void AnimationManager::paintEvent(QPainter& painter)
+//
+// ✔ ESTO reemplaza paintEvent() — método seguro
+//
+void AnimationManager::render(QPainter &painter)
 {
-    painter.drawPixmap(productPosition_, boxPixmap_);
+    if (!boxPixmap_.isNull()) {
+        painter.drawPixmap(productPosition_, boxPixmap_.scaled(120, 120, Qt::KeepAspectRatio));
+    }
 }

@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include <QPixmap>
+#include <QPoint>
 #include "productioncontroller.h"
+#include "animationmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,30 +16,32 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
 
 private slots:
-    // Botones
     void on_btnStart_clicked();
     void on_btnStop_clicked();
 
-    // Barras de estadísticas
     void updateProcessedCount(int v);
     void updateActiveWorkers(int v);
 
-    // 👇 Nuevo slot para llenar la tabla
     void onProcessEvent(const QString &station,
                         int productId,
                         const QString &state,
                         const QString &time);
 
+    // 🔥 Recibimos posición animada
+    void onAnimationUpdated(const QPoint &pos);
+
 private:
     Ui::MainWindow *ui;
+
     ProductionController controller_;
+    AnimationManager animationManager_;
 
     // Imágenes
     QPixmap background_;
@@ -50,6 +54,9 @@ private:
     QPixmap worker3_;
     QPixmap worker4_;
     QPixmap worker5_;
+
+    // Posición para dibujar la caja animada
+    QPoint animPosition_;
 };
 
 #endif // MAINWINDOW_H

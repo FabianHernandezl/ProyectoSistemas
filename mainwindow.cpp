@@ -5,7 +5,6 @@
 #include <QPainter>
 #include <QDebug>
 #include <QTableWidgetItem>
-#include "animationmanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -99,6 +98,16 @@ MainWindow::MainWindow(QWidget *parent)
     //
     connect(&controller_, &ProductionController::processEvent,
             this, &MainWindow::onProcessEvent);
+
+    //
+    // -------------------------
+    //  🔥 CONECTAR ANIMACIÓN
+    // -------------------------
+    //
+    connect(&animationManager_, &AnimationManager::positionChanged,
+            this, &MainWindow::onAnimationUpdated);
+
+    animationManager_.startAnimations();
 }
 
 MainWindow::~MainWindow()
@@ -114,57 +123,45 @@ void MainWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
 
-    // Fondo fábrica
     painter.drawPixmap(0, 0, width(), height(), background_);
 
-    //
-    // *** PERSONAJES DETRÁS DE LA CINTA ***
-    //
     int beltHeight = conveyorBelt_.height() * 0.25;
     int beltY = height() - beltHeight - 200;
 
-    // Worker 1
     painter.drawPixmap(200, 200,
                        worker1_.scaled(300, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    // Worker 2
     painter.drawPixmap(435, 240,
                        worker2_.scaled(300, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    // Worker 3
     painter.drawPixmap(700, 250,
                        worker3_.scaled(300, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    // Worker 4
     painter.drawPixmap(900, 300,
                        worker4_.scaled(400, 600, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    // Worker 5
     painter.drawPixmap(1200, 175,
                        worker5_.scaled(300, 500, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    //
-    // *** CINTA TRANSPORTADORA (FRENTE A LOS WORKERS) ***
-    //
     int beltWidth = conveyorBelt_.width();
     QPixmap stretchedBelt = conveyorBelt_.scaled(beltWidth, beltHeight, Qt::IgnoreAspectRatio);
     painter.drawPixmap(-40, beltY, stretchedBelt);
 
-    //
-    // *** CAJA 1 ***
-    //
     if (!box_.isNull()) {
         QPixmap scaled = box_.scaled(200, 200, Qt::KeepAspectRatio);
         painter.drawPixmap(250, beltY - 20, scaled);
     }
 
-    //
-    // *** CAJA 2 ***
-    //
     if (!box2_.isNull()) {
         QPixmap scaled = box2_.scaled(150, 150, Qt::KeepAspectRatio);
         painter.drawPixmap(width() - 480, beltY + 50, scaled);
     }
+
+    //
+    // 🔥 DIBUJA LA ANIMACIÓN DE LA CAJA
+    //
+    animationManager_.render(painter);
+
 
     QMainWindow::paintEvent(event);
 }
@@ -176,11 +173,13 @@ void MainWindow::paintEvent(QPaintEvent *event)
 void MainWindow::on_btnStart_clicked()
 {
     controller_.startProduction();
+    animationManager_.startAnimations();
 }
 
 void MainWindow::on_btnStop_clicked()
 {
     controller_.stopProduction();
+    animationManager_.stopAnimations();
 }
 
 //
@@ -195,18 +194,6 @@ void MainWindow::updateProcessedCount(int v)
 void MainWindow::updateActiveWorkers(int v)
 {
     ui->barRecursos->setValue(v);
-}
-
-//
-// -------------------------
-//  ACTUALIZAR ANIMACIONES
-// -------------------------
-void MainWindow::updateAnimations(int animationState)
-{
-    // Aquí puedes actualizar las animaciones según el estado
-    // Por ejemplo, si animationState es 1, comienza una animación.
-    // Llama a tu AnimationManager aquí para cambiar el estado de la animación según lo necesites.
-    // Esto es solo un ejemplo y depende de la lógica de tu AnimationManager.
 }
 
 //
@@ -227,4 +214,14 @@ void MainWindow::onProcessEvent(const QString &station,
     ui->tblProcesses->setItem(row, 3, new QTableWidgetItem(time));
 
     ui->tblProcesses->scrollToBottom();
+}
+
+//
+// -------------------------
+//  🔥 Recibir actualización de animación
+// -------------------------
+void MainWindow::onAnimationUpdated(const QPoint &pos)
+{
+    animPosition_ = pos;
+    update();  // Fuerza repintado
 }

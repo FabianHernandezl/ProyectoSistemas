@@ -47,7 +47,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(1506, 851);
-        MainWindow->setAutoFillBackground(true);
+        MainWindow->setAutoFillBackground(false);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         txtLog = new QPlainTextEdit(centralwidget);
