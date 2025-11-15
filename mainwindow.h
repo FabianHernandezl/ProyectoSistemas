@@ -3,9 +3,16 @@
 
 #include <QMainWindow>
 #include <QPixmap>
-#include <QPoint>
 #include "productioncontroller.h"
 #include "animationmanager.h"
+#include "persistence_manager.h"  // Asegúrate de que esté incluida para persistencia
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QCloseEvent>
+#include <QMessageBox>
+#include <QListWidget>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,47 +23,54 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;  // No se toca, tu código sigue igual
+    void closeEvent(QCloseEvent *event) override;  // Para guardar datos al cerrar
 
 private slots:
-    void on_btnStart_clicked();
-    void on_btnStop_clicked();
+    // Botones
+    void on_btnStart_clicked();   // Botón para iniciar la producción
+    void on_btnPause_clicked();   // Botón para pausar la producción
+    void on_btnExit_clicked();    // Botón para salir de la aplicación
+    void on_btnDelete_clicked();  // Botón para eliminar la producción
 
-    void updateProcessedCount(int v);
-    void updateActiveWorkers(int v);
+    // Barras de estadísticas
+    void updateProcessedCount(int v);  // Actualiza el contador de productos procesados
+    void updateActiveWorkers(int v);   // Actualiza el número de trabajadores activos
 
     void onProcessEvent(const QString &station,
                         int productId,
                         const QString &state,
-                        const QString &time);
+                        const QString &time);  // Evento para los procesos
 
     // 🔥 Recibimos posición animada
     void onAnimationUpdated(const QPoint &pos);
 
+    // Métodos para manejar la eliminación de la producción
+    void clearAllProduction();         // Eliminar toda la producción
+    void deleteSpecificProcess();      // Eliminar un proceso específico
+
 private:
     Ui::MainWindow *ui;
-
     ProductionController controller_;
-    AnimationManager animationManager_;
+    AnimationManager animationManager_;  // Gestor de animación
 
     // Imágenes
     QPixmap background_;
     QPixmap conveyorBelt_;
     QPixmap box_;
     QPixmap box2_;
-
     QPixmap worker1_;
     QPixmap worker2_;
     QPixmap worker3_;
     QPixmap worker4_;
     QPixmap worker5_;
 
-    // Posición para dibujar la caja animada
-    QPoint animPosition_;
+    QJsonArray currentRows_;  // Para almacenar los datos en memoria (tabla de procesos)
+    QPoint animPosition_;    // Para la animación
 };
 
 #endif // MAINWINDOW_H

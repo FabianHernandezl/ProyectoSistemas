@@ -17,7 +17,7 @@ public:
     ~ProductionController();
 
     void startProduction();
-    void stopProduction();
+    void pauseProduction();
 
     // --- Estadísticas ---
     void incrementProcessed() {

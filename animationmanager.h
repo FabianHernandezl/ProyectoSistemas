@@ -35,6 +35,11 @@ private:
     QPoint productPosition_;
     QPixmap boxPixmap_;
     bool isAnimating_;
+    bool isPaused_;              // Para saber si la animación está en pausa
+    int pauseDuration_;          // Duración de la pausa en ciclos
+    int currentPauseTime_;       // Tiempo actual de la pausa
+    QVector<int> pausePositions_; // Vector de posiciones en las que hacer una pausa
+    int currentPauseIndex_;      // Índice actual de la pausa que estamos esperando
 };
 
 #endif // ANIMATIONMANAGER_H

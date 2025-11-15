@@ -14,6 +14,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     ownershipguard.cpp \
+    persistence_manager.cpp \
     product.cpp \
     productioncontroller.cpp \
     producttracker.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     buffer.h \
     mainwindow.h \
     ownershipguard.h \
+    persistence_manager.h \
     product.h \
     productioncontroller.h \
     producttracker.h \

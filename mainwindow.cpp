@@ -5,6 +5,13 @@
 #include <QPainter>
 #include <QDebug>
 #include <QTableWidgetItem>
+#include "persistence_manager.h" // Asegúrate de incluir tu clase de persistencia
+#include <QJsonObject>
+#include <QCloseEvent>
+#include <QMessageBox>
+#include <QListWidget>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,16 +24,16 @@ MainWindow::MainWindow(QWidget *parent)
     //  CARGA DE IMÁGENES
     // -------------------------
     //
-    background_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/fondo/factory2_background.png");
-    conveyorBelt_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/cinta_transportadora/conveyor_belt.png");
-    box_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/caja/caja.png");
-    box2_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/caja/caja2.png");
+    background_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/fondo/factory2_background.png");
+    conveyorBelt_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
+    box_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja.png");
+    box2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja2.png");
 
-    worker1_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/personajes/worker1.png");
-    worker2_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/personajes/worker2.png");
-    worker3_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/personajes/worker3.png");
-    worker4_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/personajes/worker4.png");
-    worker5_ = QPixmap("/home/fahern/Descargas/IF4001_ProductionLine/resources/personajes/worker5.png");
+    worker1_ = QPixmap("//home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1.png");
+    worker2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker2.png");
+    worker3_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker3.png");
+    worker4_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker4.png");
+    worker5_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker5.png");
 
     //
     // -------------------------
@@ -107,7 +114,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&animationManager_, &AnimationManager::positionChanged,
             this, &MainWindow::onAnimationUpdated);
 
-    animationManager_.startAnimations();
+    // Inicializamos la animación (sin empezar automáticamente)
+    // animationManager_.startAnimations();
 }
 
 MainWindow::~MainWindow()
@@ -162,30 +170,26 @@ void MainWindow::paintEvent(QPaintEvent *event)
     //
     animationManager_.render(painter);
 
-
     QMainWindow::paintEvent(event);
 }
-
 //
 // -------------------------
 //  BOTONES
 // -------------------------
 void MainWindow::on_btnStart_clicked()
 {
+    // Inicia la producción y la animación cuando se presiona el botón de Start
     controller_.startProduction();
-    animationManager_.startAnimations();
+    animationManager_.startAnimations();  // Inicia la animación
 }
 
-void MainWindow::on_btnStop_clicked()
+void MainWindow::on_btnPause_clicked()
 {
-    controller_.stopProduction();
+    controller_.pauseProduction();
     animationManager_.stopAnimations();
+    PersistenceManager::saveTable(currentRows_);
 }
 
-//
-// -------------------------
-//  ACTUALIZAR ESTADÍSTICAS
-// -------------------------
 void MainWindow::updateProcessedCount(int v)
 {
     ui->barProductos->setValue(v);
@@ -196,10 +200,6 @@ void MainWindow::updateActiveWorkers(int v)
     ui->barRecursos->setValue(v);
 }
 
-//
-// -------------------------
-//  LLENAR TABLA DE PROCESOS
-// -------------------------
 void MainWindow::onProcessEvent(const QString &station,
                                 int productId,
                                 const QString &state,
@@ -214,6 +214,105 @@ void MainWindow::onProcessEvent(const QString &station,
     ui->tblProcesses->setItem(row, 3, new QTableWidgetItem(time));
 
     ui->tblProcesses->scrollToBottom();
+
+    // Crear objeto JSON para esta fila
+    QJsonObject obj;
+    obj["station"] = station;
+    obj["productId"] = productId;
+    obj["state"] = state;
+    obj["time"] = time;
+
+    // Guardar en la lista en memoria
+    currentRows_.append(obj);
+
+    // Persistir todo en JSON
+    PersistenceManager::saveTable(currentRows_);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    // Guardar los datos al cerrar la aplicación
+    PersistenceManager::saveTable(currentRows_);
+    event->accept();
+}
+
+void MainWindow::on_btnExit_clicked()
+{
+    qApp->quit();
+}
+
+void MainWindow::on_btnDelete_clicked()
+{
+    // Mostrar cuadro de diálogo para eliminar
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Eliminar Producción",
+                                  "¿Desea eliminar toda la producción o solo un proceso?",
+                                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+    if (reply == QMessageBox::Yes) {
+        clearAllProduction();
+    } else if (reply == QMessageBox::No) {
+        deleteSpecificProcess();
+    }
+}
+
+void MainWindow::clearAllProduction()
+{
+    ui->tblProcesses->setRowCount(0);  // Eliminar todas las filas
+    currentRows_ = QJsonArray();  // Reiniciar los datos en memoria
+    PersistenceManager::saveTable(currentRows_);  // Guardar
+    QMessageBox::information(this, "Eliminación Completa", "Toda la producción ha sido eliminada.");
+}
+
+void MainWindow::deleteSpecificProcess()
+{
+    // Crear un cuadro de lista para eliminar un proceso específico
+    QDialog *dialog = new QDialog(this);
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+
+    QListWidget *listWidget = new QListWidget(dialog);
+    for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
+        QString processInfo = ui->tblProcesses->item(row, 1)->text();
+        listWidget->addItem("Producto " + processInfo);
+    }
+    layout->addWidget(listWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+    dialog->setLayout(layout);
+    dialog->exec();
+
+    if (dialog->result() == QDialog::Accepted) {
+        QString selectedProcess = listWidget->currentItem()->text();
+        bool processFound = false;
+        int productId = selectedProcess.split(" ").last().toInt();
+
+        for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
+            if (ui->tblProcesses->item(row, 1)->text().toInt() == productId) {
+                ui->tblProcesses->removeRow(row);
+
+                // Eliminar también del JSON
+                for (int i = 0; i < currentRows_.size(); ++i) {
+                    QJsonObject obj = currentRows_[i].toObject();
+                    if (obj["productId"].toInt() == productId) {
+                        currentRows_.removeAt(i);
+                        PersistenceManager::saveTable(currentRows_);
+                        break;
+                    }
+                }
+
+                processFound = true;
+                QMessageBox::information(this, "Proceso Eliminado", "El proceso seleccionado ha sido eliminado.");
+                break;
+            }
+        }
+
+        if (!processFound) {
+            QMessageBox::warning(this, "Error", "Este proceso no existe.");
+        }
+    }
+
+    delete dialog;
 }
 
 //

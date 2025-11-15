@@ -40,7 +40,7 @@ ProductionController::ProductionController(QObject *parent)
 
 ProductionController::~ProductionController()
 {
-    stopProduction();
+    pauseProduction();
     clearAll();
 }
 
@@ -139,7 +139,7 @@ void ProductionController::startProduction()
 //           DETENER PRODUCCIÓN
 // ───────────────────────────────────────────────
 //
-void ProductionController::stopProduction()
+void ProductionController::pauseProduction()
 {
     if (!running_) return;
 
