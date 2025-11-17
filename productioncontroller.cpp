@@ -174,3 +174,14 @@ void ProductionController::handleStationEvent(
 {
     emit processEvent(station, productId, state, timestamp);
 }
+
+//
+// ───────────────────────────────────────────────
+//  REINICIA EL CONTADOR DESPUES DEL DELETE
+// ───────────────────────────────────────────────
+//
+void ProductionController::resetProductCounter()
+{
+    nextProductId_ = 1;
+}
+

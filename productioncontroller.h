@@ -18,6 +18,7 @@ public:
 
     void startProduction();
     void pauseProduction();
+    void resetProductCounter();
 
     // --- Estadísticas ---
     void incrementProcessed() {

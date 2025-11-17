@@ -5,13 +5,15 @@
 #include <QPainter>
 #include <QDebug>
 #include <QTableWidgetItem>
-#include "persistence_manager.h" // Asegúrate de incluir tu clase de persistencia
+#include "persistence_manager.h"
 #include <QJsonObject>
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <QDialog>
+#include <QSet>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -243,77 +245,163 @@ void MainWindow::on_btnExit_clicked()
 
 void MainWindow::on_btnDelete_clicked()
 {
-    // Mostrar cuadro de diálogo para eliminar
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Eliminar Producción",
-                                  "¿Desea eliminar toda la producción o solo un proceso?",
-                                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+    QMessageBox msg(this);
+    msg.setWindowTitle("Eliminar Producción");
+    msg.setText("¿Qué desea eliminar?");
 
-    if (reply == QMessageBox::Yes) {
-        clearAllProduction();
-    } else if (reply == QMessageBox::No) {
+    QPushButton *btnAll = msg.addButton("Toda la producción", QMessageBox::AcceptRole);
+    QPushButton *btnOne = msg.addButton("Un proceso", QMessageBox::ActionRole);
+    QPushButton *btnCancel = msg.addButton("Cancelar", QMessageBox::RejectRole);
+
+    msg.exec();
+
+    if (msg.clickedButton() == btnAll) {
+            // Confirmación adicional
+            QMessageBox::StandardButton confirm =
+                QMessageBox::warning(
+                    this,
+                    "Confirmar eliminación",
+                    "¿Está seguro que desea eliminar toda la producción?\n"
+                    "Esta acción no se puede deshacer.",
+                    QMessageBox::Yes | QMessageBox::Cancel
+                    );
+
+            if (confirm == QMessageBox::Yes) {
+                clearAllProduction();
+            } else {
+                QMessageBox::information(this,
+                                         "Cancelado",
+                                         "La eliminación fue cancelada.");
+            }
+
+            return;
+
+    } else if (msg.clickedButton() == btnOne) {
         deleteSpecificProcess();
+    } else if (msg.clickedButton() == btnCancel) {
+        // No hacer nada (cancelado)
+        return;
     }
 }
 
 void MainWindow::clearAllProduction()
 {
-    ui->tblProcesses->setRowCount(0);  // Eliminar todas las filas
-    currentRows_ = QJsonArray();  // Reiniciar los datos en memoria
-    PersistenceManager::saveTable(currentRows_);  // Guardar
-    QMessageBox::information(this, "Eliminación Completa", "Toda la producción ha sido eliminada.");
+    // Limpiar tabla
+    ui->tblProcesses->setRowCount(0);
+
+    // Limpiar logs
+    ui->txtLog->clear();
+
+    // Reiniciar contador de productos
+    controller_.resetProductCounter();
+
+    // Limpiar JSON
+    currentRows_ = QJsonArray();
+    PersistenceManager::saveTable(currentRows_);
+
+    QMessageBox::information(this,
+                             "Producción eliminada",
+                             "Toda la producción ha sido eliminada correctamente.");
 }
 
 void MainWindow::deleteSpecificProcess()
 {
-    // Crear un cuadro de lista para eliminar un proceso específico
-    QDialog *dialog = new QDialog(this);
-    QVBoxLayout *layout = new QVBoxLayout(dialog);
+    // 1. Construir lista de IDs únicos a partir de la tabla
+    QSet<int> idsUnicos;
 
-    QListWidget *listWidget = new QListWidget(dialog);
     for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
-        QString processInfo = ui->tblProcesses->item(row, 1)->text();
-        listWidget->addItem("Producto " + processInfo);
+        bool ok = false;
+        int id = ui->tblProcesses->item(row, 1)->text().toInt(&ok);
+        if (ok) {
+            idsUnicos.insert(id);
+        }
+    }
+
+    if (idsUnicos.isEmpty()) {
+        QMessageBox::information(this, "Sin procesos",
+                                 "No hay procesos disponibles para eliminar.");
+        return;
+    }
+
+    // 2. Crear diálogo modal
+    QDialog dialog(this);
+    dialog.setWindowTitle("Eliminar proceso");
+
+    QVBoxLayout *layout = new QVBoxLayout(&dialog);
+
+    QListWidget *listWidget = new QListWidget(&dialog);
+    for (int id : idsUnicos) {
+        listWidget->addItem(QString("Producto %1").arg(id));
     }
     layout->addWidget(listWidget);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox =
+        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                             Qt::Horizontal, &dialog);
     layout->addWidget(buttonBox);
-    dialog->setLayout(layout);
-    dialog->exec();
 
-    if (dialog->result() == QDialog::Accepted) {
-        QString selectedProcess = listWidget->currentItem()->text();
-        bool processFound = false;
-        int productId = selectedProcess.split(" ").last().toInt();
+    // Conectar botones a aceptar / cancelar
+    QObject::connect(buttonBox, &QDialogButtonBox::accepted,
+                     &dialog, &QDialog::accept);
+    QObject::connect(buttonBox, &QDialogButtonBox::rejected,
+                     &dialog, &QDialog::reject);
 
-        for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
-            if (ui->tblProcesses->item(row, 1)->text().toInt() == productId) {
-                ui->tblProcesses->removeRow(row);
+    dialog.setLayout(layout);
 
-                // Eliminar también del JSON
-                for (int i = 0; i < currentRows_.size(); ++i) {
-                    QJsonObject obj = currentRows_[i].toObject();
-                    if (obj["productId"].toInt() == productId) {
-                        currentRows_.removeAt(i);
-                        PersistenceManager::saveTable(currentRows_);
-                        break;
-                    }
-                }
+    // 3. Mostrar diálogo
+    if (dialog.exec() != QDialog::Accepted) {
+        // Usuario canceló
+        return;
+    }
 
-                processFound = true;
-                QMessageBox::information(this, "Proceso Eliminado", "El proceso seleccionado ha sido eliminado.");
-                break;
-            }
-        }
+    // 4. Verificar selección
+    QListWidgetItem *item = listWidget->currentItem();
+    if (!item) {
+        QMessageBox::warning(this, "Sin selección",
+                             "No se ha seleccionado ningún proceso.");
+        return;
+    }
 
-        if (!processFound) {
-            QMessageBox::warning(this, "Error", "Este proceso no existe.");
+    int productId = item->text().split(' ').last().toInt();
+
+    // 5. Verificar si el producto ya fue finalizado
+    bool finalizado = false;
+    for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
+        int idFila = ui->tblProcesses->item(row, 1)->text().toInt();
+        QString estado = ui->tblProcesses->item(row, 2)->text();
+        if (idFila == productId && estado == "Finalizado") {
+            finalizado = true;
+            break;
         }
     }
 
-    delete dialog;
+    if (finalizado) {
+        QMessageBox::warning(this, "No se puede eliminar",
+                             "El proceso seleccionado ya fue finalizado.");
+        return;
+    }
+
+    // 6. Eliminar TODAS las filas de ese producto en la tabla
+    for (int row = ui->tblProcesses->rowCount() - 1; row >= 0; --row) {
+        int idFila = ui->tblProcesses->item(row, 1)->text().toInt();
+        if (idFila == productId) {
+            ui->tblProcesses->removeRow(row);
+        }
+    }
+
+    // 7. Eliminar también del JSON en memoria
+    for (int i = currentRows_.size() - 1; i >= 0; --i) {
+        QJsonObject obj = currentRows_[i].toObject();
+        if (obj["productId"].toInt() == productId) {
+            currentRows_.removeAt(i);
+        }
+    }
+    PersistenceManager::saveTable(currentRows_);
+
+    QMessageBox::information(this, "Proceso eliminado",
+                             QString("Se eliminó el proceso del producto %1.").arg(productId));
 }
+
 
 //
 // -------------------------
