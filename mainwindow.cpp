@@ -28,10 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
     //
     background_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/fondo/factory2_background.png");
     conveyorBelt_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
-<<<<<<< Updated upstream
-=======
+
     //box_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja.png");
->>>>>>> Stashed changes
+
     box2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja2.png");
 
     worker1Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_a.png",

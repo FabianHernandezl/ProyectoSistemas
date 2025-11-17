@@ -88,6 +88,8 @@ void ProductionController::startProduction()
                     this, &ProductionController::handleStationEvent);
             s->start();
         }
+        activeWorkers_ = stations_.size();
+        emit updateActiveWorkers(activeWorkers_);
     }
 
     if (!productTimer_)
@@ -120,6 +122,7 @@ void ProductionController::pauseProduction()
 
     running_ = false;
     emit logMessage(ts() + " ⏸️ Pausing production...");
+    emit updateActiveWorkers(0);
 
     if (productTimer_)
         productTimer_->stop();
@@ -140,6 +143,12 @@ void ProductionController::handleStationEvent(
     const QString &timestamp)
 {
     emit processEvent(station, productId, state, timestamp);
+
+    // ------------ MÉTRICAS --------------
+    if (state == "Finalizado") {
+        processedCount_++;
+        emit updateProcessedCount(processedCount_);
+    }
 }
 
 // =======================
@@ -159,6 +168,8 @@ void ProductionController::stopAllStations()
         s->stopStation();
 
     emit logMessage(ts() + " ⛔ Todas las estaciones detenidas.");
+    emit updateActiveWorkers(0);
+
 }
 
 // =======================
