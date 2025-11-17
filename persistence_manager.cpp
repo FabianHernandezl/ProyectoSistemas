@@ -8,7 +8,7 @@
 
 QString PersistenceManager::filePath()
 {
-    QString path = QDir::homePath() + "/ProyectoSistemasData";
+    QString path = QDir::homePath() + "/Proyecto/ProyectoSistemas/ProyectoSistemasData";
     QDir().mkpath(path);
     return path + "/process_table.json";
 }

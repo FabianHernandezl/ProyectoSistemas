@@ -28,6 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
     //
     background_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/fondo/factory2_background.png");
     conveyorBelt_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
+<<<<<<< Updated upstream
+=======
+    //box_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja.png");
+>>>>>>> Stashed changes
     box2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja2.png");
 
     worker1Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_a.png",
@@ -157,38 +161,38 @@ MainWindow::MainWindow(QWidget *parent)
 
     QString msgBoxStyle = R"(
 QMessageBox {
-    background-color: #fff3d4;
-    border: 3px solid #f6c97a;
+    background-color: #ffe8b5;
+    border: 3px solid #d4a95a;
     border-radius: 15px;
-    font-family: "Comic Sans MS";
+    font-family: "Segoe UI", Arial, sans-serif;
     font-size: 16px;
 }
 
 QLabel {
-    color: #6b4f2d;
-    font-family: "Comic Sans MS";
+    color: #5a4123;
+    font-family: "Segoe UI", Arial, sans-serif;
     font-size: 16px;
 }
 
 QPushButton {
-    background-color: #ffda8a;
-    border: 2px solid #c89a4b;
+    background-color: #e6b85c;
+    border: 2px solid #a87c3a;
     border-radius: 8px;
     padding: 6px 14px;
     font-size: 14px;
-    font-family: "Comic Sans MS";
-    color: #6b4f2d;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #5a4123;
+    font-weight: bold;
 }
 
 QPushButton:hover {
-    background-color: #ffe7b8;
+    background-color: #f0c97c;
 }
 
 QPushButton:pressed {
-    background-color: #fcd37c;
+    background-color: #d4a95a;
 }
 )";
-
     qApp->setStyleSheet(qApp->styleSheet() + msgBoxStyle);
 
 }
@@ -362,8 +366,25 @@ void MainWindow::on_btnDelete_clicked()
     menu.exec();
 
     if (menu.clickedButton() == btnDeleteAll) {
-        clearAllProduction();
-    }
+        // Confirmación adicional
+        QMessageBox::StandardButton confirm =
+            QMessageBox::warning(
+                this,
+                "Confirmar eliminación",
+                "¿Está seguro que desea eliminar toda la producción?\n"
+                "Esta acción no se puede deshacer.",
+                QMessageBox::Yes | QMessageBox::Cancel
+                );
+
+        if (confirm == QMessageBox::Yes) {
+            clearAllProduction();
+        } else {
+            QMessageBox::information(this,
+                                     "Cancelado",
+                                     "La eliminación fue cancelada.");
+        }
+
+        return;    }
     else if (menu.clickedButton() == btnDeleteOne) {
         deleteSpecificProcess();
     }
