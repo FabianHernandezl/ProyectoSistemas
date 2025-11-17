@@ -34,6 +34,9 @@ public:
     void pauseSpecificStationDialog(QWidget *parent);
     void stopSpecificStationDialog(QWidget *parent);
 
+    // Saber si las estaciones existen (para los menús del MainWindow)
+    bool stationsEmpty() const { return stations_.isEmpty(); }
+
     // Control de hilos de mantenimiento (ESTO ES LO QUE TE FALTABA)
     void startMaintenanceThreads();
     void pauseMaintenanceThreads();

@@ -26,24 +26,24 @@ MainWindow::MainWindow(QWidget *parent)
     //  CARGA DE IMÁGENES
     // -------------------------
     //
-    background_ = QPixmap("/home/zateal/Proyecto/ProyectoSistemas/resources/fondo/factory2_background.png");
-    conveyorBelt_ = QPixmap("/home/zateal/Proyecto/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
-    box2_ = QPixmap("/home/zateal/Proyecto/ProyectoSistemas/resources/caja/caja2.png");
+    background_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/fondo/factory2_background.png");
+    conveyorBelt_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
+    box2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja2.png");
 
-    worker1Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker1_a.png",
-                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker1_b.png");
+    worker1Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_b.png");
 
-    worker2Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker2_a.png",
-                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker2_b.png");
+    worker2Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker2_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker2_b.png");
 
-    worker3Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker3_a.png",
-                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker3_b.png");
+    worker3Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker3_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker3_b.png");
 
-    worker4Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker4_a.png",
-                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker4_b.png");
+    worker4Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker4_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker4_b.png");
 
-    worker5Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker5_a.png",
-                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker5_b.png");
+    worker5Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker5_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker5_b.png");
 
     //
     // -------------------------
@@ -269,6 +269,7 @@ void MainWindow::on_btnStart_clicked()
 
     QPushButton *btnStartProduction = menu.addButton("▶️ Iniciar toda la producción", QMessageBox::AcceptRole);
     QPushButton *btnStartAnimations = menu.addButton("▶️ Iniciar solo animaciones", QMessageBox::ActionRole);
+    QPushButton *btnStartStation = menu.addButton("▶️ Iniciar estación específica", QMessageBox::ActionRole);
     QPushButton *btnStartMaint = menu.addButton("🧹 Iniciar hilos de mantenimiento", QMessageBox::ActionRole);
 
     QPushButton *btnCancel = menu.addButton("Cancelar", QMessageBox::RejectRole);
@@ -281,6 +282,16 @@ void MainWindow::on_btnStart_clicked()
     }
     else if (menu.clickedButton() == btnStartAnimations) {
         animationManager_.startAnimations();
+    }else if (menu.clickedButton() == btnStartStation) {
+
+        if (controller_.stationsEmpty()) {
+            QMessageBox::warning(this,
+                                 "Error",
+                                 "Debe iniciar la producción antes de seleccionar una estación.");
+            return;
+        }
+
+        controller_.startSpecificStationDialog(this);
     }
     else if (menu.clickedButton() == btnStartMaint) {
         controller_.startMaintenanceThreads();
@@ -300,6 +311,7 @@ void MainWindow::on_btnPause_clicked()
 
     QPushButton *btnPauseAll = menu.addButton("⏸️ Pausar toda la producción", QMessageBox::ActionRole);
     QPushButton *btnPauseAnimations = menu.addButton("⏸️ Pausar solo animaciones", QMessageBox::ActionRole);
+    QPushButton *btnPauseStation = menu.addButton("⏸️ Pausar estación específica", QMessageBox::ActionRole);
     QPushButton *btnPauseMaint = menu.addButton("⏸️ Pausar hilos de mantenimiento", QMessageBox::ActionRole);
 
     QPushButton *btnCancel = menu.addButton("Cancelar", QMessageBox::RejectRole);
@@ -312,6 +324,17 @@ void MainWindow::on_btnPause_clicked()
     }
     else if (menu.clickedButton() == btnPauseAnimations) {
         animationManager_.stopAnimations();
+    }
+    else if (menu.clickedButton() == btnPauseStation) {
+
+        if (controller_.stationsEmpty()) {
+            QMessageBox::warning(this,
+                                 "Error",
+                                 "Debe iniciar la producción antes de pausar estaciones.");
+            return;
+        }
+
+        controller_.pauseSpecificStationDialog(this);
     }
     else if (menu.clickedButton() == btnPauseMaint) {
         controller_.pauseMaintenanceThreads();
@@ -332,10 +355,10 @@ void MainWindow::on_btnDelete_clicked()
 
     QPushButton *btnDeleteAll = menu.addButton("🗑️ Eliminar toda la producción", QMessageBox::DestructiveRole);
     QPushButton *btnDeleteOne = menu.addButton("🗑️ Eliminar proceso específico", QMessageBox::ActionRole);
+    QPushButton *btnStopOne = menu.addButton("⛔ Detener estación específica", QMessageBox::ActionRole);
     QPushButton *btnStopAll = menu.addButton("⛔ Detener todas las estaciones (POISON PILL)", QMessageBox::DestructiveRole);
 
     QPushButton *btnCancel = menu.addButton("Cancelar", QMessageBox::RejectRole);
-
     menu.exec();
 
     if (menu.clickedButton() == btnDeleteAll) {
@@ -343,6 +366,17 @@ void MainWindow::on_btnDelete_clicked()
     }
     else if (menu.clickedButton() == btnDeleteOne) {
         deleteSpecificProcess();
+    }
+    else if (menu.clickedButton() == btnStopOne) {
+
+        if (controller_.stationsEmpty()) {
+            QMessageBox::warning(this,
+                                 "Error",
+                                 "Debe iniciar la producción antes de detener estaciones.");
+            return;
+        }
+
+        controller_.stopSpecificStationDialog(this);
     }
     else if (menu.clickedButton() == btnStopAll) {
         controller_.stopAllStations();
@@ -377,8 +411,6 @@ void MainWindow::on_btnExit_clicked()
     }
 }
 
-
-
 //
 // -------------------------
 //  ANIMACIÓN
@@ -389,9 +421,6 @@ void MainWindow::onAnimationUpdated(const QPoint &pos)
     update();
 }
 
-// =====================================================
-//  IMPLEMENTACIONES FALTANTES PARA EVITAR EL LINK ERROR
-// =====================================================
 
 void MainWindow::updateProcessedCount(int v)
 {

@@ -19,6 +19,7 @@ public:
             int index,
             ProductionController *controller);
 
+    // Getter del nombre (solo uno)
     QString name() const { return name_; }
 
     // === LO QUE EL PROFESOR PIDIÓ ===
@@ -29,7 +30,10 @@ public:
     void setAsLastStation() { isLastStation_ = true; }
 
 signals:
-    void processEvent(const QString &station, int id, const QString &state, const QString &time);
+    void processEvent(const QString &station,
+                      int id,
+                      const QString &state,
+                      const QString &time);
 
 protected:
     void run() override;

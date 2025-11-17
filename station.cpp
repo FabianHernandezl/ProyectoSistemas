@@ -48,9 +48,11 @@ void Station::stopStation()
 
 void Station::run()
 {
+    running_ = true;
+
     while (running_)
     {
-        // Pausa activa
+        // -------- PAUSA --------
         while (paused_ && running_)
         {
             QThread::msleep(100);
@@ -58,27 +60,26 @@ void Station::run()
 
         if (!running_) break;
 
-        // Tomar producto
+        // -------- LEER DEL BUFFER --------
         Product p = input_->remove();
 
-        if (p.isPoison())
+
+        emit processEvent(name_, p.getId(), "Procesando", ts());
+
+        // Simulación de trabajo
+        QThread::msleep(800);
+
+        if (isLastStation_)
         {
-            emit processEvent(name_, -1, "Stop signal", ts());
-            break;
+            emit processEvent(name_, p.getId(), "Finalizado", ts());
         }
-
-        emit processEvent(name_, p.id(), "Recibido", ts());
-
-        p.advanceState(name_);
-        emit processEvent(name_, p.id(), "Procesando", ts());
-
-        QThread::msleep(600 + QRandomGenerator::global()->bounded(800));
-
-        if (output_)
-            output_->insert(p);
         else
-            emit processEvent(name_, p.id(), "Finalizado", ts());
+        {
+            output_->insert(p);
+            emit processEvent(name_, p.getId(), "Enviado", ts());
+        }
     }
 
-    emit processEvent(name_, -1, "Stopped", ts());
+    emit processEvent(name_, -1, "Detenida", ts());
 }
+
