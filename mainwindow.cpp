@@ -26,14 +26,23 @@ MainWindow::MainWindow(QWidget *parent)
     //
     background_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/fondo/factory2_background.png");
     conveyorBelt_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
-    box_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja.png");
+    //box_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja.png");
     box2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja2.png");
 
-    worker1_ = QPixmap("//home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1.png");
-    worker2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker2.png");
-    worker3_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker3.png");
-    worker4_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker4.png");
-    worker5_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker5.png");
+    worker1Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_b.png");
+
+    worker2Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker2_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker2_b.png");
+
+    worker3Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker3_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker3_b.png");
+
+    worker4Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker4_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker4_b.png");
+
+    worker5Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker5_a.png",
+                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker5_b.png");
 
     //
     // -------------------------
@@ -114,9 +123,35 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&animationManager_, &AnimationManager::positionChanged,
             this, &MainWindow::onAnimationUpdated);
 
-    // Inicializamos la animación (sin empezar automáticamente)
-    // animationManager_.startAnimations();
-}
+    // Que MainWindow se repinte cuando cambie un frame
+    connect(&worker1Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
+    connect(&worker2Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
+    connect(&worker3Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
+    connect(&worker4Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
+    connect(&worker5Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
+
+    //la animación inicia cuando la caja hace una parada en cada estación
+    connect(&animationManager_, &AnimationManager::pause1Reached, &worker1Anim_, &AnimationWorkerManager::start);
+    connect(&animationManager_, &AnimationManager::pause2Reached, &worker2Anim_, &AnimationWorkerManager::start);
+    connect(&animationManager_, &AnimationManager::pause3Reached, &worker3Anim_, &AnimationWorkerManager::start);
+    connect(&animationManager_, &AnimationManager::pause4Reached, &worker4Anim_, &AnimationWorkerManager::start);
+    connect(&animationManager_, &AnimationManager::pause5Reached, &worker5Anim_, &AnimationWorkerManager::start);
+
+    //para una por una las animaciones una vez pasa la caja
+    connect(&animationManager_, &AnimationManager::stop1Reached, &worker1Anim_, &AnimationWorkerManager::stop);
+    connect(&animationManager_, &AnimationManager::stop2Reached, &worker2Anim_, &AnimationWorkerManager::stop);
+    connect(&animationManager_, &AnimationManager::stop3Reached, &worker3Anim_, &AnimationWorkerManager::stop);
+    connect(&animationManager_, &AnimationManager::stop4Reached, &worker4Anim_, &AnimationWorkerManager::stop);
+    connect(&animationManager_, &AnimationManager::stop5Reached, &worker5Anim_, &AnimationWorkerManager::stop);
+
+    //paran todas las animaciones
+    connect(&animationManager_, &AnimationManager::allWorkersStop, &worker1Anim_, &AnimationWorkerManager::stop);
+    connect(&animationManager_, &AnimationManager::allWorkersStop, &worker2Anim_, &AnimationWorkerManager::stop);
+    connect(&animationManager_, &AnimationManager::allWorkersStop, &worker3Anim_, &AnimationWorkerManager::stop);
+    connect(&animationManager_, &AnimationManager::allWorkersStop, &worker4Anim_, &AnimationWorkerManager::stop);
+    connect(&animationManager_, &AnimationManager::allWorkersStop, &worker5Anim_, &AnimationWorkerManager::stop);
+
+    }
 
 MainWindow::~MainWindow()
 {
@@ -136,20 +171,35 @@ void MainWindow::paintEvent(QPaintEvent *event)
     int beltHeight = conveyorBelt_.height() * 0.25;
     int beltY = height() - beltHeight - 200;
 
-    painter.drawPixmap(200, 200,
-                       worker1_.scaled(300, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    // TRABAJADOR 1 ANIMADO
+    painter.drawPixmap(
+        200, 200,
+        worker1Anim_.currentFrame().scaled(300, 400, Qt::KeepAspectRatio,Qt::SmoothTransformation)
+        );
 
-    painter.drawPixmap(435, 240,
-                       worker2_.scaled(300, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    // TRABAJADOR 2 ANIMADO
+    painter.drawPixmap(
+        435, 240,
+        worker2Anim_.currentFrame().scaled(300, 400, Qt::KeepAspectRatio,Qt::SmoothTransformation)
+        );
 
-    painter.drawPixmap(700, 250,
-                       worker3_.scaled(300, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    // TRABAJADOR 3 ANIMADO
+    painter.drawPixmap(
+        700, 250,
+        worker3Anim_.currentFrame().scaled(300, 400, Qt::KeepAspectRatio,Qt::SmoothTransformation)
+        );
 
-    painter.drawPixmap(900, 300,
-                       worker4_.scaled(400, 600, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    // TRABAJADOR 4 ANIMADO
+    painter.drawPixmap(
+        900, 300,
+        worker4Anim_.currentFrame().scaled(400, 600, Qt::KeepAspectRatio,Qt::SmoothTransformation)
+        );
 
-    painter.drawPixmap(1200, 175,
-                       worker5_.scaled(300, 500, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    // TRABAJADOR 5 ANIMADO
+    painter.drawPixmap(
+        1200, 175,
+        worker5Anim_.currentFrame().scaled(300, 500, Qt::KeepAspectRatio,Qt::SmoothTransformation)
+        );
 
     int beltWidth = conveyorBelt_.width();
     QPixmap stretchedBelt = conveyorBelt_.scaled(beltWidth, beltHeight, Qt::IgnoreAspectRatio);

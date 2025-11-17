@@ -5,6 +5,7 @@
 #include <QPixmap>
 #include "productioncontroller.h"
 #include "animationmanager.h"
+#include "animationworkermanager.h"
 #include "persistence_manager.h"  // Asegúrate de que esté incluida para persistencia
 #include <QJsonArray>
 #include <QJsonObject>
@@ -57,6 +58,11 @@ private:
     Ui::MainWindow *ui;
     ProductionController controller_;
     AnimationManager animationManager_;  // Gestor de animación
+    AnimationWorkerManager worker1Anim_;
+    AnimationWorkerManager worker2Anim_;
+    AnimationWorkerManager worker3Anim_;
+    AnimationWorkerManager worker4Anim_;
+    AnimationWorkerManager worker5Anim_;
 
     // Imágenes
     QPixmap background_;

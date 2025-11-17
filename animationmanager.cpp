@@ -5,11 +5,11 @@ AnimationManager::AnimationManager(QObject *parent)
     : QObject(parent),
     animationSpeed_(50),
     isAnimating_(false),
-    productPosition_(250, 500),  // posición inicial visible
+    productPosition_(250, 500),   // INICIO INTENCIONAL EN LA ESTACIÓN 1
     isPaused_(false),
-    pauseDuration_(100),       // Duración de la pausa en ciclos
+    pauseDuration_(100),
     currentPauseTime_(0),
-    currentPauseIndex_(0)      // Inicializa el índice de pausa en 0
+    currentPauseIndex_(0)
 {
     animationTimer_ = new QTimer(this);
 
@@ -18,8 +18,8 @@ AnimationManager::AnimationManager(QObject *parent)
 
     boxPixmap_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja.png");
 
-    // Inicializamos las posiciones donde queremos hacer las pausas
-    pausePositions_ = {250, 500, 750, 1000, 1200};  // Puntos donde deseas hacer las pausas
+    // 🔥 5 estaciones de pausa
+    pausePositions_ = {250, 500, 750, 1000, 1200};
 }
 
 AnimationManager::~AnimationManager()
@@ -39,66 +39,83 @@ void AnimationManager::stopAnimations()
     if (isAnimating_) {
         isAnimating_ = false;
         animationTimer_->stop();
+        emit allWorkersStop();
     }
 }
 
 void AnimationManager::onAnimationFrame()
 {
-    // Si la animación está en pausa, no se mueve
+    // Si está detenido en una pausa
     if (isPaused_) {
-        currentPauseTime_++;  // Incrementamos el tiempo de pausa
 
-        // Si se ha alcanzado la duración de la pausa, continuamos el movimiento
+        currentPauseTime_++;
+
         if (currentPauseTime_ >= pauseDuration_) {
-            isPaused_ = false;  // Desactiva la pausa
-            currentPauseTime_ = 0;  // Reinicia el contador de pausa
 
-            // Pasamos al siguiente índice de pausa
+            isPaused_ = false;
+            currentPauseTime_ = 0;
+
+            // DETENER AL TRABAJADOR QUE ACABA DE TERMINAR
+            switch (currentPauseIndex_) {
+            case 0: emit stop1Reached(); break;
+            case 1: emit stop2Reached(); break;
+            case 2: emit stop3Reached(); break;
+            case 3: emit stop4Reached(); break;
+            case 4: emit stop5Reached(); break;
+            }
+
             currentPauseIndex_++;
+        }
 
-            // Si hemos pasado por todas las pausas, reiniciamos
-            if (currentPauseIndex_ >= pausePositions_.size()) {
-                currentPauseIndex_ = 0;  // Reinicia el índice para comenzar nuevamente
+
+        return;
+    }
+
+    // Movimiento
+    productPosition_.rx() += 5;
+
+    // 🔥 ACTIVAR PAUSA CUANDO SE LLEGUE A UNA DE LAS 5 ESTACIONES
+    if (currentPauseIndex_ < pausePositions_.size()) {
+
+        int pauseX = pausePositions_[currentPauseIndex_];
+
+        if (productPosition_.x() >= pauseX &&
+            productPosition_.x() <= pauseX + 20)
+        {
+            isPaused_ = true;
+
+            switch (currentPauseIndex_) {
+            case 0: emit pause1Reached(); break;
+            case 1: emit pause2Reached(); break;
+            case 2: emit pause3Reached(); break;
+            case 3: emit pause4Reached(); break;
+            case 4: emit pause5Reached(); break;
             }
         }
-        return;  // Sale para no mover la caja
     }
 
-    // Movimiento horizontal
-    productPosition_.rx() += 5;  // Mueve a la derecha
-
-    // Verificamos si la caja ha llegado a la posición de pausa
-    if (productPosition_.x() >= pausePositions_[currentPauseIndex_] &&
-        productPosition_.x() <= pausePositions_[currentPauseIndex_] + 50 && !isPaused_) {
-        isPaused_ = true;  // Activa la pausa
-        pauseDuration_ = 100;  // Duración de la pausa en ciclos (ajusta este valor)
-    }
-
-    // Si la caja sale de la pantalla a la derecha, reiniciamos la posición
-    if (productPosition_.x() > 1200) {
-        productPosition_.setX(0);
+    // 🔄 Reinicio de la animación al final
+    if (productPosition_.x() > 1300) {
+        productPosition_.setX(250);
+        currentPauseIndex_ = 0;
+        emit allWorkersStop();
     }
 
     emit positionChanged(productPosition_);
 }
 
-void AnimationManager::updatePosition(int, const QPoint &newPosition)
+void AnimationManager::updatePosition(int, const QPoint &newPos)
 {
-    productPosition_ = newPosition;
+    productPosition_ = newPos;
 }
 
-//
-// ✔ ESTO reemplaza paintEvent() — método seguro
-//
 void AnimationManager::render(QPainter &painter)
 {
     if (!boxPixmap_.isNull()) {
-        // Ajusta la posición Y para mover la caja hacia arriba
-        QPoint adjustedPosition = productPosition_;
-        adjustedPosition.setY(productPosition_.y() - 125);  // Ajusta hacia arriba
+        QPoint adjusted = productPosition_;
+        adjusted.setY(productPosition_.y() - 125);  // Mantener caja arriba
 
-        // Escala y dibuja la caja
         QPixmap scaled = boxPixmap_.scaled(200, 200, Qt::KeepAspectRatio);
-        painter.drawPixmap(adjustedPosition, scaled);  // Dibuja la caja en la nueva posición ajustada
+        painter.drawPixmap(adjusted, scaled);
     }
 }
