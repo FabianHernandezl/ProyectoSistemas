@@ -3,22 +3,23 @@
 
 #include <QString>
 
-class Product {
+class Product
+{
 public:
     Product();
     Product(int id, const QString &type);
-    explicit Product(bool poison);
+    Product(bool poison);
+
+    int id() const { return id_; }
+    int getId() const { return id_; }     // ← Compatibilidad con tu código viejo
+    QString type() const { return type_; }
+    QString currentState() const { return currentState_; }
 
     bool isPoison() const { return poison_; }
 
-    int getId() const { return id_; }
-    int id() const { return id_; }
-    QString type() const { return type_; }
-
     void advanceState(const QString &newState);
-    QString info() const;
 
-    static Product poisonPill() { return Product(true); }
+    QString info() const;
 
 private:
     int id_;

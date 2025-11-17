@@ -4,9 +4,16 @@
 #include <QObject>
 #include <QList>
 #include <QTimer>
+#include <QWidget>
+
 #include "buffer.h"
 #include "station.h"
 #include "product.h"
+
+// Hilos de mantenimiento
+#include "generalcleanthread.h"
+#include "generallogthread.h"
+#include "generalstatsthread.h"
 
 class ProductionController : public QObject
 {
@@ -16,62 +23,58 @@ public:
     explicit ProductionController(QObject *parent = nullptr);
     ~ProductionController();
 
+    // Control general de la producción
     void startProduction();
     void pauseProduction();
     void resetProductCounter();
 
-    // --- Estadísticas ---
-    void incrementProcessed() {
-        processedCount_++;
-        emit updateProcessedCount(processedCount_);
-    }
+    // Control de estaciones
+    void stopAllStations();
+    void startSpecificStationDialog(QWidget *parent);
+    void pauseSpecificStationDialog(QWidget *parent);
+    void stopSpecificStationDialog(QWidget *parent);
 
-    void incrementWorkers() {
-        activeWorkers_++;
-        emit updateActiveWorkers(activeWorkers_);
-    }
-
-    void decrementWorkers() {
-        if (activeWorkers_ > 0)
-            activeWorkers_--;
-        emit updateActiveWorkers(activeWorkers_);
-    }
+    // Control de hilos de mantenimiento (ESTO ES LO QUE TE FALTABA)
+    void startMaintenanceThreads();
+    void pauseMaintenanceThreads();
 
 signals:
     void logMessage(const QString &msg);
     void updateProcessedCount(int value);
     void updateActiveWorkers(int value);
 
-    // Señal que se enviará a MainWindow
     void processEvent(const QString &station,
                       int productId,
                       const QString &state,
                       const QString &timestamp);
 
 public slots:
-    // SLOT que recibe señales de las estaciones
     void handleStationEvent(const QString &station,
                             int productId,
                             const QString &state,
                             const QString &timestamp);
 
-private slots:
     void forwardDebugMessage(const QString &msg);
 
 private:
     QString ts() const;
+
     void clearAll();
 
     QList<Buffer*> buffers_;
     QList<Station*> stations_;
 
     bool running_ = false;
-
     QTimer *productTimer_ = nullptr;
     int nextProductId_ = 1;
 
     int processedCount_ = 0;
     int activeWorkers_ = 0;
+
+    // HILOS DE MANTENIMIENTO
+    GeneralCleanThread *cleanThread_ = nullptr;
+    GeneralLogThread   *logThread_ = nullptr;
+    GeneralStatsThread *statsThread_ = nullptr;
 };
 
-#endif
+#endif // PRODUCTIONCONTROLLER_H

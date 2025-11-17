@@ -2,13 +2,12 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QMetaObject>
-#include <QTimer>
+#include <QInputDialog>
+#include <QMessageBox>
 
-//
-// ───────────────────────────────────────────────
-//     HANDLER GLOBAL DE MENSAJES (LOG)
-// ───────────────────────────────────────────────
-//
+// =======================
+//  LOGGER GLOBAL
+// =======================
 static ProductionController *g_controller = nullptr;
 
 static void qtMessageHandler(QtMsgType,
@@ -26,11 +25,9 @@ static void qtMessageHandler(QtMsgType,
     }
 }
 
-//
-// ───────────────────────────────────────────────
-//         CONSTRUCTOR / DESTRUCTOR
-// ───────────────────────────────────────────────
-//
+// =======================
+//    CONSTRUCTOR
+// =======================
 ProductionController::ProductionController(QObject *parent)
     : QObject(parent)
 {
@@ -44,21 +41,14 @@ ProductionController::~ProductionController()
     clearAll();
 }
 
-//
-// ───────────────────────────────────────────────
-//               TIMESTAMP
-// ───────────────────────────────────────────────
-//
 QString ProductionController::ts() const
 {
     return QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
 }
 
-//
-// ───────────────────────────────────────────────
-//          LIMPIEZA COMPLETA
-// ───────────────────────────────────────────────
-//
+// =======================
+//     LIMPIEZA
+// =======================
 void ProductionController::clearAll()
 {
     qDeleteAll(stations_);
@@ -68,11 +58,9 @@ void ProductionController::clearAll()
     buffers_.clear();
 }
 
-//
-// ───────────────────────────────────────────────
-//           INICIAR PRODUCCIÓN
-// ───────────────────────────────────────────────
-//
+// =======================
+//    INICIAR PRODUCCIÓN
+// =======================
 void ProductionController::startProduction()
 {
     if (running_) return;
@@ -80,9 +68,6 @@ void ProductionController::startProduction()
     running_ = true;
     emit logMessage(ts() + " ▶️ Starting production...");
 
-    //
-    // Crear buffers + estaciones SOLO 1 VEZ
-    //
     if (buffers_.isEmpty())
     {
         for (int i = 0; i < 5; ++i)
@@ -93,31 +78,23 @@ void ProductionController::startProduction()
         stations_.append(new Station("Inspection", buffers_[2], buffers_[3], 2, this));
         stations_.append(new Station("Packing",    buffers_[3], buffers_[4], 3, this));
 
-        // SHIPPING — última estación
-        stations_.append(new Station("Shipping", buffers_[4], nullptr, 4, this));
-        stations_.last()->setAsLastStation();
+        Station *shipping = new Station("Shipping", buffers_[4], nullptr, 4, this);
+        shipping->setAsLastStation();
+        stations_.append(shipping);
 
-        //
-        // CONECTAR: cada estación emite processEvent → controlador
-        //
         for (auto *s : stations_)
         {
             connect(s, &Station::processEvent,
                     this, &ProductionController::handleStationEvent);
-
             s->start();
         }
     }
 
-    //
-    // Timer para insertar productos
-    //
     if (!productTimer_)
     {
         productTimer_ = new QTimer(this);
 
         connect(productTimer_, &QTimer::timeout, this, [this]() {
-
             if (!running_) return;
 
             if (buffers_[0]->size() < buffers_[0]->capacity())
@@ -125,8 +102,8 @@ void ProductionController::startProduction()
                 Product p(nextProductId_++, "Standard");
                 buffers_[0]->insert(p);
 
-                emit logMessage(
-                    ts() + QString(" 📦 Inserted product %1 into buffer 0").arg(p.getId()));
+                emit logMessage(ts() +
+                                QString(" 📦 Inserted product %1 into buffer 0").arg(p.getId()));
             }
         });
     }
@@ -134,38 +111,28 @@ void ProductionController::startProduction()
     productTimer_->start(800);
 }
 
-//
-// ───────────────────────────────────────────────
-//           DETENER PRODUCCIÓN
-// ───────────────────────────────────────────────
-//
+// =======================
+//    PAUSAR PRODUCCIÓN
+// =======================
 void ProductionController::pauseProduction()
 {
     if (!running_) return;
 
     running_ = false;
-
     emit logMessage(ts() + " ⏸️ Pausing production...");
 
     if (productTimer_)
         productTimer_->stop();
 }
 
-//
-// ───────────────────────────────────────────────
-//           LOG DE MENSAJES DE QT
-// ───────────────────────────────────────────────
-//
+// =======================
+//   MANEJO DE EVENTOS
+// =======================
 void ProductionController::forwardDebugMessage(const QString &msg)
 {
     emit logMessage(msg);
 }
 
-//
-// ───────────────────────────────────────────────
-//  SLOT: EVENTO RECIBIDO DESDE UNA ESTACIÓN
-// ───────────────────────────────────────────────
-//
 void ProductionController::handleStationEvent(
     const QString &station,
     int productId,
@@ -175,13 +142,116 @@ void ProductionController::handleStationEvent(
     emit processEvent(station, productId, state, timestamp);
 }
 
-//
-// ───────────────────────────────────────────────
-//  REINICIA EL CONTADOR DESPUES DEL DELETE
-// ───────────────────────────────────────────────
-//
+// =======================
+//   REINICIAR ID
+// =======================
 void ProductionController::resetProductCounter()
 {
     nextProductId_ = 1;
 }
 
+// =======================
+//   DETENER TODAS
+// =======================
+void ProductionController::stopAllStations()
+{
+    for (Station *s : stations_)
+        s->stopStation();
+
+    emit logMessage(ts() + " ⛔ Todas las estaciones detenidas.");
+}
+
+// =======================
+//  DIALOGOS DE ESTACIONES
+// =======================
+void ProductionController::startSpecificStationDialog(QWidget *parent)
+{
+    QStringList names;
+    for (auto *s : stations_)
+        names << s->name();
+
+    bool ok;
+    QString selected = QInputDialog::getItem(
+        parent, "Iniciar estación", "Seleccione la estación:",
+        names, 0, false, &ok);
+
+    if (!ok) return;
+
+    int index = names.indexOf(selected);
+    if (index < 0) return;
+
+    stations_[index]->resumeStation();
+}
+
+void ProductionController::pauseSpecificStationDialog(QWidget *parent)
+{
+    QStringList names;
+    for (auto *s : stations_)
+        names << s->name();
+
+    bool ok;
+    QString selected = QInputDialog::getItem(
+        parent, "Pausar estación", "Seleccione la estación:",
+        names, 0, false, &ok);
+
+    if (!ok) return;
+
+    int index = names.indexOf(selected);
+    if (index < 0) return;
+
+    stations_[index]->pauseStation();
+}
+
+void ProductionController::stopSpecificStationDialog(QWidget *parent)
+{
+    QStringList names;
+    for (auto *s : stations_)
+        names << s->name();
+
+    bool ok;
+    QString selected = QInputDialog::getItem(
+        parent, "Detener estación", "Seleccione la estación:",
+        names, 0, false, &ok);
+
+    if (!ok) return;
+
+    int index = names.indexOf(selected);
+    if (index < 0) return;
+
+    stations_[index]->stopStation();
+}
+
+// =======================
+//   HILOS DE MANTENIMIENTO
+// =======================
+void ProductionController::startMaintenanceThreads()
+{
+    if (!cleanThread_)
+    {
+        cleanThread_ = new GeneralCleanThread(this);
+        cleanThread_->start();
+    }
+
+    if (!logThread_)
+    {
+        logThread_ = new GeneralLogThread(this);
+        logThread_->start();
+    }
+
+    if (!statsThread_)
+    {
+        statsThread_ = new GeneralStatsThread(this);
+        statsThread_->start();
+    }
+
+    emit logMessage(ts() + " 🔧 Hilos de mantenimiento iniciados.");
+}
+
+void ProductionController::pauseMaintenanceThreads()
+{
+    if (cleanThread_) cleanThread_->stop();
+    if (logThread_) logThread_->stop();
+    if (statsThread_) statsThread_->stop();
+
+    emit logMessage(ts() + " 🚫 Hilos de mantenimiento detenidos.");
+}

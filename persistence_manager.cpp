@@ -4,15 +4,12 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QDebug>
 
 QString PersistenceManager::filePath()
 {
     QString path = QDir::homePath() + "/ProyectoSistemasData";
-
-    // Crear la carpeta si no existe
     QDir().mkpath(path);
-
-    // Crear el archivo dentro de la carpeta
     return path + "/process_table.json";
 }
 
@@ -23,48 +20,45 @@ void PersistenceManager::saveTable(const QJsonArray &rows)
 
     QJsonDocument doc(root);
 
-    QString file = filePath();
-    QFile out(file);
-
-    if (!out.open(QIODevice::WriteOnly | QIODevice::Truncate))
-    {
-        qWarning() << "❌ No se pudo abrir el archivo JSON para escribir:" << file;
+    QFile out(filePath());
+    if (!out.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        qWarning() << "❌ No se pudo abrir el archivo JSON para escribir.";
         return;
     }
 
     out.write(doc.toJson());
     out.close();
-
-    //qDebug() << "💾 JSON guardado en:" << file;
 }
 
 QJsonArray PersistenceManager::loadTable()
 {
-    QString file = filePath();  // Obtener la ruta del archivo
-
-    QFile in(file);
-
+    QFile in(filePath());
     if (!in.open(QIODevice::ReadOnly))
-    {
-        qWarning() << "❌ No se pudo abrir el archivo JSON para leer:" << file;
-        return QJsonArray();  // Si no se puede abrir el archivo, devolver un arreglo vacío
-    }
+        return QJsonArray();
 
-    // Leer el archivo JSON
-    QByteArray data = in.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(in.readAll());
     in.close();
 
-    // Convertir el JSON a un documento
-    QJsonDocument doc = QJsonDocument::fromJson(data);
+    if (!doc.isObject())
+        return QJsonArray();
 
-    // Verificar si es un objeto JSON y extraer el array de "events"
-    if (doc.isObject()) {
-        QJsonObject root = doc.object();
-        if (root.contains("events") && root["events"].isArray()) {
-            return root["events"].toArray();  // Retornar el QJsonArray con los eventos
-        }
-    }
+    QJsonObject root = doc.object();
+    if (root.contains("events") && root["events"].isArray())
+        return root["events"].toArray();
 
-    return QJsonArray();  // Si no es un formato esperado, devolver un arreglo vacío
+    return QJsonArray();
 }
 
+//
+// --- COMPATIBILIDAD PARA MainWindow ---
+//
+
+void PersistenceManager::saveEvents(const QJsonArray &rows)
+{
+    saveTable(rows);
+}
+
+QJsonArray PersistenceManager::loadEvents()
+{
+    return loadTable();
+}

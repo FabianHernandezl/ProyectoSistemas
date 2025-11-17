@@ -2,6 +2,7 @@
 #define STATION_H
 
 #include <QThread>
+#include <atomic>
 #include "buffer.h"
 #include "product.h"
 
@@ -18,7 +19,13 @@ public:
             int index,
             ProductionController *controller);
 
-    void stop();
+    QString name() const { return name_; }
+
+    // === LO QUE EL PROFESOR PIDIÓ ===
+    void pauseStation();
+    void resumeStation();
+    void stopStation();
+
     void setAsLastStation() { isLastStation_ = true; }
 
 signals:
@@ -36,7 +43,12 @@ private:
     int index_;
 
     ProductionController *controller_;
+
     bool isLastStation_ = false;
+
+    // CONTROL DEL HILO
+    std::atomic<bool> running_{true};
+    std::atomic<bool> paused_{false};
 };
 
 #endif

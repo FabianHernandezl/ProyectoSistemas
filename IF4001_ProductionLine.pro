@@ -25,6 +25,11 @@ HEADERS += \
     animationmanager.h \
     animationworkermanager.h \
     buffer.h \
+    generalcleanthread.h \
+    generalcleanthread.h \
+    generallogthread.h \
+    generallogthread.h \
+    generalstatsthread.h \
     mainwindow.h \
     ownershipguard.h \
     persistence_manager.h \

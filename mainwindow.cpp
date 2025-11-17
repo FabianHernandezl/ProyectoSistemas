@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
     //
     background_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/fondo/factory2_background.png");
     conveyorBelt_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
-    //box_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja.png");
     box2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja2.png");
 
     worker1Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_a.png",
@@ -62,11 +61,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tblProcesses->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tblProcesses->setSelectionMode(QAbstractItemView::NoSelection);
 
-    ui->tblProcesses->setStyleSheet(
-        "QTableWidget { background: rgba(255,255,255,180); font-size: 14px; }"
-        "QHeaderView::section { background: #c0d8f0; font-weight: bold; }"
-        );
-
     //
     // -------------------------
     //  CONFIG BARRAS
@@ -74,21 +68,13 @@ MainWindow::MainWindow(QWidget *parent)
     //
     ui->barProductos->setRange(0, 100);
     ui->barProductos->setValue(0);
-    ui->barProductos->setStyleSheet(
-        "QProgressBar { background: rgba(255,255,255,180); border-radius: 5px; }"
-        "QProgressBar::chunk { background-color: #4aa3ff; }"
-        );
 
     ui->barRecursos->setRange(0, 5);
     ui->barRecursos->setValue(0);
-    ui->barRecursos->setStyleSheet(
-        "QProgressBar { background: rgba(255,255,255,180); border-radius: 5px; }"
-        "QProgressBar::chunk { background-color: #ff944d; }"
-        );
 
     //
     // -------------------------
-    //  CONECTAR LOG DEL SISTEMA
+    //  CONECTAR LOG
     // -------------------------
     //
     connect(&controller_, &ProductionController::logMessage,
@@ -100,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //
     // -------------------------
-    //  CONECTAR ESTADÍSTICAS
+    //  ESTADÍSTICAS
     // -------------------------
     //
     connect(&controller_, &ProductionController::updateProcessedCount,
@@ -111,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //
     // -------------------------
-    //  CONECTAR EVENTOS DE ESTACIÓN
+    //  EVENTOS DE ESTACIÓN
     // -------------------------
     //
     connect(&controller_, &ProductionController::processEvent,
@@ -119,41 +105,58 @@ MainWindow::MainWindow(QWidget *parent)
 
     //
     // -------------------------
-    //  🔥 CONECTAR ANIMACIÓN
+    //  ANIMACIÓN
     // -------------------------
     //
     connect(&animationManager_, &AnimationManager::positionChanged,
             this, &MainWindow::onAnimationUpdated);
 
-    // Que MainWindow se repinte cuando cambie un frame
     connect(&worker1Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
     connect(&worker2Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
     connect(&worker3Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
     connect(&worker4Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
     connect(&worker5Anim_, &AnimationWorkerManager::frameChanged, this, QOverload<>::of(&MainWindow::update));
 
-    //la animación inicia cuando la caja hace una parada en cada estación
     connect(&animationManager_, &AnimationManager::pause1Reached, &worker1Anim_, &AnimationWorkerManager::start);
     connect(&animationManager_, &AnimationManager::pause2Reached, &worker2Anim_, &AnimationWorkerManager::start);
     connect(&animationManager_, &AnimationManager::pause3Reached, &worker3Anim_, &AnimationWorkerManager::start);
     connect(&animationManager_, &AnimationManager::pause4Reached, &worker4Anim_, &AnimationWorkerManager::start);
     connect(&animationManager_, &AnimationManager::pause5Reached, &worker5Anim_, &AnimationWorkerManager::start);
 
-    //para una por una las animaciones una vez pasa la caja
     connect(&animationManager_, &AnimationManager::stop1Reached, &worker1Anim_, &AnimationWorkerManager::stop);
     connect(&animationManager_, &AnimationManager::stop2Reached, &worker2Anim_, &AnimationWorkerManager::stop);
     connect(&animationManager_, &AnimationManager::stop3Reached, &worker3Anim_, &AnimationWorkerManager::stop);
     connect(&animationManager_, &AnimationManager::stop4Reached, &worker4Anim_, &AnimationWorkerManager::stop);
     connect(&animationManager_, &AnimationManager::stop5Reached, &worker5Anim_, &AnimationWorkerManager::stop);
 
-    //paran todas las animaciones
     connect(&animationManager_, &AnimationManager::allWorkersStop, &worker1Anim_, &AnimationWorkerManager::stop);
     connect(&animationManager_, &AnimationManager::allWorkersStop, &worker2Anim_, &AnimationWorkerManager::stop);
     connect(&animationManager_, &AnimationManager::allWorkersStop, &worker3Anim_, &AnimationWorkerManager::stop);
     connect(&animationManager_, &AnimationManager::allWorkersStop, &worker4Anim_, &AnimationWorkerManager::stop);
     connect(&animationManager_, &AnimationManager::allWorkersStop, &worker5Anim_, &AnimationWorkerManager::stop);
 
+
+    //
+    // -------------------------
+    //  CARGA DE PERSISTENCIA
+    // -------------------------
+    //
+    currentRows_ = PersistenceManager::loadEvents();
+
+    for (auto row : currentRows_) {
+        QJsonObject obj = row.toObject();
+
+        int r = ui->tblProcesses->rowCount();
+        ui->tblProcesses->insertRow(r);
+
+        ui->tblProcesses->setItem(r, 0, new QTableWidgetItem(obj["station"].toString()));
+        ui->tblProcesses->setItem(r, 1, new QTableWidgetItem(QString::number(obj["productId"].toInt())));
+        ui->tblProcesses->setItem(r, 2, new QTableWidgetItem(obj["state"].toString()));
+        ui->tblProcesses->setItem(r, 3, new QTableWidgetItem(obj["time"].toString()));
     }
+
+}
+
 
 MainWindow::~MainWindow()
 {
@@ -207,40 +210,152 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPixmap stretchedBelt = conveyorBelt_.scaled(beltWidth, beltHeight, Qt::IgnoreAspectRatio);
     painter.drawPixmap(-40, beltY, stretchedBelt);
 
-    if (!box_.isNull()) {
-        QPixmap scaled = box_.scaled(200, 200, Qt::KeepAspectRatio);
-        painter.drawPixmap(250, beltY - 20, scaled);
-    }
+    if (!box_.isNull())
+        painter.drawPixmap(250, beltY - 20, box_.scaled(200, 200));
 
-    if (!box2_.isNull()) {
-        QPixmap scaled = box2_.scaled(150, 150, Qt::KeepAspectRatio);
-        painter.drawPixmap(width() - 480, beltY + 50, scaled);
-    }
+    painter.drawPixmap(width() - 480, beltY + 50, box2_.scaled(150, 150));
 
-    //
-    // 🔥 DIBUJA LA ANIMACIÓN DE LA CAJA
-    //
     animationManager_.render(painter);
 
     QMainWindow::paintEvent(event);
 }
+
+
 //
 // -------------------------
-//  BOTONES
+//  BOTÓN START — MENÚ AVANZADO
 // -------------------------
 void MainWindow::on_btnStart_clicked()
 {
-    // Inicia la producción y la animación cuando se presiona el botón de Start
-    controller_.startProduction();
-    animationManager_.startAnimations();  // Inicia la animación
+    QMessageBox menu(this);
+    menu.setWindowTitle("Opciones de inicio");
+    menu.setText("Seleccione una acción:");
+
+    QPushButton *btnStartProduction = menu.addButton("▶️ Iniciar toda la producción", QMessageBox::AcceptRole);
+    QPushButton *btnStartAnimations = menu.addButton("▶️ Iniciar solo animaciones", QMessageBox::ActionRole);
+    QPushButton *btnStartMaint = menu.addButton("🧹 Iniciar hilos de mantenimiento", QMessageBox::ActionRole);
+
+    QPushButton *btnCancel = menu.addButton("Cancelar", QMessageBox::RejectRole);
+
+    menu.exec();
+
+    if (menu.clickedButton() == btnStartProduction) {
+        controller_.startProduction();
+        animationManager_.startAnimations();
+    }
+    else if (menu.clickedButton() == btnStartAnimations) {
+        animationManager_.startAnimations();
+    }
+    else if (menu.clickedButton() == btnStartMaint) {
+        controller_.startMaintenanceThreads();
+    }
 }
 
+
+//
+// -------------------------
+//  BOTÓN PAUSE — MENÚ AVANZADO
+// -------------------------
 void MainWindow::on_btnPause_clicked()
 {
-    controller_.pauseProduction();
-    animationManager_.stopAnimations();
-    PersistenceManager::saveTable(currentRows_);
+    QMessageBox menu(this);
+    menu.setWindowTitle("Opciones de pausa");
+    menu.setText("Seleccione qué desea pausar:");
+
+    QPushButton *btnPauseAll = menu.addButton("⏸️ Pausar toda la producción", QMessageBox::ActionRole);
+    QPushButton *btnPauseAnimations = menu.addButton("⏸️ Pausar solo animaciones", QMessageBox::ActionRole);
+    QPushButton *btnPauseMaint = menu.addButton("⏸️ Pausar hilos de mantenimiento", QMessageBox::ActionRole);
+
+    QPushButton *btnCancel = menu.addButton("Cancelar", QMessageBox::RejectRole);
+
+    menu.exec();
+
+    if (menu.clickedButton() == btnPauseAll) {
+        controller_.pauseProduction();
+        animationManager_.stopAnimations();
+    }
+    else if (menu.clickedButton() == btnPauseAnimations) {
+        animationManager_.stopAnimations();
+    }
+    else if (menu.clickedButton() == btnPauseMaint) {
+        controller_.pauseMaintenanceThreads();
+    }
 }
+
+
+
+//
+// -------------------------
+//  BOTÓN DELETE — MENÚ AVANZADO
+// -------------------------
+void MainWindow::on_btnDelete_clicked()
+{
+    QMessageBox menu(this);
+    menu.setWindowTitle("Eliminar / Detener");
+    menu.setText("Seleccione una acción:");
+
+    QPushButton *btnDeleteAll = menu.addButton("🗑️ Eliminar toda la producción", QMessageBox::DestructiveRole);
+    QPushButton *btnDeleteOne = menu.addButton("🗑️ Eliminar proceso específico", QMessageBox::ActionRole);
+    QPushButton *btnStopAll = menu.addButton("⛔ Detener todas las estaciones (POISON PILL)", QMessageBox::DestructiveRole);
+
+    QPushButton *btnCancel = menu.addButton("Cancelar", QMessageBox::RejectRole);
+
+    menu.exec();
+
+    if (menu.clickedButton() == btnDeleteAll) {
+        clearAllProduction();
+    }
+    else if (menu.clickedButton() == btnDeleteOne) {
+        deleteSpecificProcess();
+    }
+    else if (menu.clickedButton() == btnStopAll) {
+        controller_.stopAllStations();
+    }
+
+}
+
+
+
+//
+// -------------------------
+//  BOTÓN EXIT — MENÚ AVANZADO
+// -------------------------
+void MainWindow::on_btnExit_clicked()
+{
+    QMessageBox menu(this);
+    menu.setWindowTitle("Salir del sistema");
+    menu.setText("¿Seguro que desea salir?");
+
+    QPushButton *btnSaveExit = menu.addButton("💾 Guardar y salir", QMessageBox::AcceptRole);
+    QPushButton *btnForceExit = menu.addButton("⚠️ Salida forzada", QMessageBox::DestructiveRole);
+    QPushButton *btnCancel = menu.addButton("Cancelar", QMessageBox::RejectRole);
+
+    menu.exec();
+
+    if (menu.clickedButton() == btnSaveExit) {
+        PersistenceManager::saveEvents(currentRows_);
+        qApp->quit();
+    }
+    else if (menu.clickedButton() == btnForceExit) {
+        qApp->quit();
+    }
+}
+
+
+
+//
+// -------------------------
+//  ANIMACIÓN
+// -------------------------
+void MainWindow::onAnimationUpdated(const QPoint &pos)
+{
+    animPosition_ = pos;
+    update();
+}
+
+// =====================================================
+//  IMPLEMENTACIONES FALTANTES PARA EVITAR EL LINK ERROR
+// =====================================================
 
 void MainWindow::updateProcessedCount(int v)
 {
@@ -267,104 +382,39 @@ void MainWindow::onProcessEvent(const QString &station,
 
     ui->tblProcesses->scrollToBottom();
 
-    // Crear objeto JSON para esta fila
     QJsonObject obj;
     obj["station"] = station;
     obj["productId"] = productId;
     obj["state"] = state;
     obj["time"] = time;
 
-    // Guardar en la lista en memoria
     currentRows_.append(obj);
-
-    // Persistir todo en JSON
     PersistenceManager::saveTable(currentRows_);
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    // Guardar los datos al cerrar la aplicación
-    PersistenceManager::saveTable(currentRows_);
-    event->accept();
-}
-
-void MainWindow::on_btnExit_clicked()
-{
-    qApp->quit();
-}
-
-void MainWindow::on_btnDelete_clicked()
-{
-    QMessageBox msg(this);
-    msg.setWindowTitle("Eliminar Producción");
-    msg.setText("¿Qué desea eliminar?");
-
-    QPushButton *btnAll = msg.addButton("Toda la producción", QMessageBox::AcceptRole);
-    QPushButton *btnOne = msg.addButton("Un proceso", QMessageBox::ActionRole);
-    QPushButton *btnCancel = msg.addButton("Cancelar", QMessageBox::RejectRole);
-
-    msg.exec();
-
-    if (msg.clickedButton() == btnAll) {
-            // Confirmación adicional
-            QMessageBox::StandardButton confirm =
-                QMessageBox::warning(
-                    this,
-                    "Confirmar eliminación",
-                    "¿Está seguro que desea eliminar toda la producción?\n"
-                    "Esta acción no se puede deshacer.",
-                    QMessageBox::Yes | QMessageBox::Cancel
-                    );
-
-            if (confirm == QMessageBox::Yes) {
-                clearAllProduction();
-            } else {
-                QMessageBox::information(this,
-                                         "Cancelado",
-                                         "La eliminación fue cancelada.");
-            }
-
-            return;
-
-    } else if (msg.clickedButton() == btnOne) {
-        deleteSpecificProcess();
-    } else if (msg.clickedButton() == btnCancel) {
-        // No hacer nada (cancelado)
-        return;
-    }
 }
 
 void MainWindow::clearAllProduction()
 {
-    // Limpiar tabla
     ui->tblProcesses->setRowCount(0);
-
-    // Limpiar logs
     ui->txtLog->clear();
 
-    // Reiniciar contador de productos
     controller_.resetProductCounter();
 
-    // Limpiar JSON
     currentRows_ = QJsonArray();
     PersistenceManager::saveTable(currentRows_);
 
-    QMessageBox::information(this,
-                             "Producción eliminada",
-                             "Toda la producción ha sido eliminada correctamente.");
+    QMessageBox::information(this, "Producción eliminada",
+                             "Toda la producción ha sido eliminada.");
 }
 
 void MainWindow::deleteSpecificProcess()
 {
-    // 1. Construir lista de IDs únicos a partir de la tabla
+    // --- 1. Obtener lista única de IDs ---
     QSet<int> idsUnicos;
 
     for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
         bool ok = false;
         int id = ui->tblProcesses->item(row, 1)->text().toInt(&ok);
-        if (ok) {
-            idsUnicos.insert(id);
-        }
+        if (ok) idsUnicos.insert(id);
     }
 
     if (idsUnicos.isEmpty()) {
@@ -373,52 +423,47 @@ void MainWindow::deleteSpecificProcess()
         return;
     }
 
-    // 2. Crear diálogo modal
+    // --- 2. Crear diálogo para escoger el ID ---
     QDialog dialog(this);
-    dialog.setWindowTitle("Eliminar proceso");
+    dialog.setWindowTitle("Eliminar proceso específico");
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
     QListWidget *listWidget = new QListWidget(&dialog);
-    for (int id : idsUnicos) {
+    for (int id : idsUnicos)
         listWidget->addItem(QString("Producto %1").arg(id));
-    }
+
     layout->addWidget(listWidget);
 
-    QDialogButtonBox *buttonBox =
-        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
-                             Qt::Horizontal, &dialog);
-    layout->addWidget(buttonBox);
+    QDialogButtonBox *btnBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+        Qt::Horizontal,
+        &dialog
+        );
+    layout->addWidget(btnBox);
 
-    // Conectar botones a aceptar / cancelar
-    QObject::connect(buttonBox, &QDialogButtonBox::accepted,
-                     &dialog, &QDialog::accept);
-    QObject::connect(buttonBox, &QDialogButtonBox::rejected,
-                     &dialog, &QDialog::reject);
+    connect(btnBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(btnBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
-    dialog.setLayout(layout);
+    // --- 3. Ejecutar diálogo ---
+    if (dialog.exec() != QDialog::Accepted) return;
 
-    // 3. Mostrar diálogo
-    if (dialog.exec() != QDialog::Accepted) {
-        // Usuario canceló
-        return;
-    }
-
-    // 4. Verificar selección
     QListWidgetItem *item = listWidget->currentItem();
     if (!item) {
         QMessageBox::warning(this, "Sin selección",
-                             "No se ha seleccionado ningún proceso.");
+                             "Debe seleccionar un proceso para eliminar.");
         return;
     }
 
     int productId = item->text().split(' ').last().toInt();
 
-    // 5. Verificar si el producto ya fue finalizado
+    // --- 4. Verificar si el proceso ya fue finalizado ---
     bool finalizado = false;
+
     for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
         int idFila = ui->tblProcesses->item(row, 1)->text().toInt();
         QString estado = ui->tblProcesses->item(row, 2)->text();
+
         if (idFila == productId && estado == "Finalizado") {
             finalizado = true;
             break;
@@ -426,12 +471,13 @@ void MainWindow::deleteSpecificProcess()
     }
 
     if (finalizado) {
-        QMessageBox::warning(this, "No se puede eliminar",
+        QMessageBox::warning(this,
+                             "No se puede eliminar",
                              "El proceso seleccionado ya fue finalizado.");
         return;
     }
 
-    // 6. Eliminar TODAS las filas de ese producto en la tabla
+    // --- 5. Eliminar todas las filas del ID ---
     for (int row = ui->tblProcesses->rowCount() - 1; row >= 0; --row) {
         int idFila = ui->tblProcesses->item(row, 1)->text().toInt();
         if (idFila == productId) {
@@ -439,26 +485,28 @@ void MainWindow::deleteSpecificProcess()
         }
     }
 
-    // 7. Eliminar también del JSON en memoria
+    // --- 6. Eliminar del JSON ---
     for (int i = currentRows_.size() - 1; i >= 0; --i) {
         QJsonObject obj = currentRows_[i].toObject();
         if (obj["productId"].toInt() == productId) {
             currentRows_.removeAt(i);
         }
     }
+
     PersistenceManager::saveTable(currentRows_);
 
-    QMessageBox::information(this, "Proceso eliminado",
-                             QString("Se eliminó el proceso del producto %1.").arg(productId));
+    // --- 7. Confirmación ---
+    QMessageBox::information(
+        this,
+        "Proceso eliminado",
+        QString("Se eliminó correctamente el proceso del producto %1.")
+            .arg(productId)
+        );
 }
 
 
-//
-// -------------------------
-//  🔥 Recibir actualización de animación
-// -------------------------
-void MainWindow::onAnimationUpdated(const QPoint &pos)
+void MainWindow::closeEvent(QCloseEvent *event)
 {
-    animPosition_ = pos;
-    update();  // Fuerza repintado
+    PersistenceManager::saveTable(currentRows_);
+    event->accept();
 }

@@ -1,8 +1,8 @@
 #include "station.h"
-#include "productioncontroller.h"
 #include <QTime>
 #include <QRandomGenerator>
 #include <QDebug>
+#include <QThread>
 
 QString Station::ts() const
 {
@@ -22,28 +22,50 @@ Station::Station(const QString &name,
 {
 }
 
-void Station::stop()
+// =======================
+// PAUSAR
+// =======================
+void Station::pauseStation()
 {
-    requestInterruption();
+    paused_ = true;
+}
+
+// =======================
+// REANUDAR
+// =======================
+void Station::resumeStation()
+{
+    paused_ = false;
+}
+
+// =======================
+// DETENER COMPLETAMENTE
+// =======================
+void Station::stopStation()
+{
+    running_ = false;
 }
 
 void Station::run()
 {
-    while (!isInterruptionRequested())
+    while (running_)
     {
-        // Esperar producto sin incrementar recurso todavía
+        // Pausa activa
+        while (paused_ && running_)
+        {
+            QThread::msleep(100);
+        }
+
+        if (!running_) break;
+
+        // Tomar producto
         Product p = input_->remove();
 
-        // Si el producto es la señal de parada
         if (p.isPoison())
         {
             emit processEvent(name_, -1, "Stop signal", ts());
             break;
         }
-
-        // 🔸 AHORA SÍ: trabajador está activo
-        if (controller_)
-            controller_->incrementWorkers();
 
         emit processEvent(name_, p.id(), "Recibido", ts());
 
@@ -53,21 +75,9 @@ void Station::run()
         QThread::msleep(600 + QRandomGenerator::global()->bounded(800));
 
         if (output_)
-        {
             output_->insert(p);
-            emit processEvent(name_, p.id(), "Enviado", ts());
-        }
         else
-        {
             emit processEvent(name_, p.id(), "Finalizado", ts());
-
-            if (controller_ && isLastStation_)
-                controller_->incrementProcessed();
-        }
-
-        // 🔸 Trabajo finalizado → restar recurso
-        if (controller_)
-            controller_->decrementWorkers();
     }
 
     emit processEvent(name_, -1, "Stopped", ts());
