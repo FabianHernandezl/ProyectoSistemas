@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     animationmanager.cpp \
+    animationworkermanager.cpp \
     buffer.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 
 HEADERS += \
     animationmanager.h \
+    animationworkermanager.h \
     buffer.h \
     mainwindow.h \
     ownershipguard.h \

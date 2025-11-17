@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QPixmap>
+#include <QPoint>
 #include <QPainter>
 
 class AnimationManager : public QObject
@@ -16,15 +17,28 @@ public:
 
     void startAnimations();
     void stopAnimations();
-
-    // ✔ método público para pintarse
     void render(QPainter &painter);
+    void updatePosition(int productId, const QPoint &newPos);
 
 signals:
     void positionChanged(const QPoint &pos);
 
-public slots:
-    void updatePosition(int productId, const QPoint &newPosition);
+    // 🔥 Señales para cada parada
+    void pause1Reached();
+    void pause2Reached();
+    void pause3Reached();
+    void pause4Reached();
+    void pause5Reached();
+
+    // Señales para detener cada trabajador por separado
+    void stop1Reached();
+    void stop2Reached();
+    void stop3Reached();
+    void stop4Reached();
+    void stop5Reached();
+
+    // 🔥 Señal para detener todos los trabajadores
+    void allWorkersStop();
 
 private slots:
     void onAnimationFrame();
@@ -32,14 +46,18 @@ private slots:
 private:
     QTimer *animationTimer_;
     int animationSpeed_;
+    bool isAnimating_;
+
     QPoint productPosition_;
     QPixmap boxPixmap_;
-    bool isAnimating_;
-    bool isPaused_;              // Para saber si la animación está en pausa
-    int pauseDuration_;          // Duración de la pausa en ciclos
-    int currentPauseTime_;       // Tiempo actual de la pausa
-    QVector<int> pausePositions_; // Vector de posiciones en las que hacer una pausa
-    int currentPauseIndex_;      // Índice actual de la pausa que estamos esperando
+
+    // Manejo de pausas
+    bool isPaused_;
+    int pauseDuration_;
+    int currentPauseTime_;
+    int currentPauseIndex_;
+
+    QVector<int> pausePositions_;
 };
 
 #endif // ANIMATIONMANAGER_H
