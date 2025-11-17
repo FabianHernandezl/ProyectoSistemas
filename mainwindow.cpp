@@ -26,24 +26,24 @@ MainWindow::MainWindow(QWidget *parent)
     //  CARGA DE IMÁGENES
     // -------------------------
     //
-    background_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/fondo/factory2_background.png");
-    conveyorBelt_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
-    box2_ = QPixmap("/home/fahern/Descargas/ProyectoSistemas/resources/caja/caja2.png");
+    background_ = QPixmap("/home/zateal/Proyecto/ProyectoSistemas/resources/fondo/factory2_background.png");
+    conveyorBelt_ = QPixmap("/home/zateal/Proyecto/ProyectoSistemas/resources/cinta_transportadora/conveyor_belt.png");
+    box2_ = QPixmap("/home/zateal/Proyecto/ProyectoSistemas/resources/caja/caja2.png");
 
-    worker1Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_a.png",
-                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker1_b.png");
+    worker1Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker1_a.png",
+                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker1_b.png");
 
-    worker2Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker2_a.png",
-                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker2_b.png");
+    worker2Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker2_a.png",
+                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker2_b.png");
 
-    worker3Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker3_a.png",
-                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker3_b.png");
+    worker3Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker3_a.png",
+                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker3_b.png");
 
-    worker4Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker4_a.png",
-                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker4_b.png");
+    worker4Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker4_a.png",
+                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker4_b.png");
 
-    worker5Anim_.setFrames("/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker5_a.png",
-                           "/home/fahern/Descargas/ProyectoSistemas/resources/personajes/worker5_b.png");
+    worker5Anim_.setFrames("/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker5_a.png",
+                           "/home/zateal/Proyecto/ProyectoSistemas/resources/personajes/worker5_b.png");
 
     //
     // -------------------------
@@ -154,6 +154,42 @@ MainWindow::MainWindow(QWidget *parent)
         ui->tblProcesses->setItem(r, 2, new QTableWidgetItem(obj["state"].toString()));
         ui->tblProcesses->setItem(r, 3, new QTableWidgetItem(obj["time"].toString()));
     }
+
+    QString msgBoxStyle = R"(
+QMessageBox {
+    background-color: #fff3d4;
+    border: 3px solid #f6c97a;
+    border-radius: 15px;
+    font-family: "Comic Sans MS";
+    font-size: 16px;
+}
+
+QLabel {
+    color: #6b4f2d;
+    font-family: "Comic Sans MS";
+    font-size: 16px;
+}
+
+QPushButton {
+    background-color: #ffda8a;
+    border: 2px solid #c89a4b;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-family: "Comic Sans MS";
+    color: #6b4f2d;
+}
+
+QPushButton:hover {
+    background-color: #ffe7b8;
+}
+
+QPushButton:pressed {
+    background-color: #fcd37c;
+}
+)";
+
+    qApp->setStyleSheet(qApp->styleSheet() + msgBoxStyle);
 
 }
 
