@@ -98,18 +98,16 @@ private:
     QLabel *estadoEstacion4;  // NUEVO - Indicador de la estación 4 (Empaque)
     QLabel *estadoEstacion5;  // NUEVO - Indicador de la estación 5 (Envío)
 
-    QLabel *estadoGlobal;     // Estado global
-    QLabel *productosCreados; // Productos creados
-    QLabel *productosFinalizados; // Productos finalizados
-    QLabel *estacionesActivas; // Estaciones activas
-
     // --- Métodos para actualizar los indicadores ---
     void actualizarEstadoEstacion(int estacion, Estado estado);
-    void actualizarResumen(int productosCreadosValor, int productosFinalizadosValor, int estacionesActivasValor);
 
-    // --- NUEVOS MÉTODOS PARA EL RESUMEN ---
+    // --- NUEVOS MÉTODOS PARA EL RESUMEN COMPLETO ---
     int calcularProductosFinalizados();
     int calcularEstacionesActivas();
+    int calcularEstacionesPausadas();
+    int calcularEstacionesDetenidas();
+    QString calcularTiempoPromedio();
+    QString generarSugerencia(double eficiencia, int activas, int pausadas);
     void actualizarTxtLog2();
     void actualizarEstadoDesdeEvento(const QString &station, const QString &state);
 };

@@ -14,6 +14,8 @@
 #include <QDialogButtonBox>
 #include <QDialog>
 #include <QSet>
+#include <QDateTime>
+#include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,12 +36,6 @@ MainWindow::MainWindow(QWidget *parent)
     actualizarEstadoEstacion(3, Detenida);  // Inspección
     actualizarEstadoEstacion(4, Detenida);  // Empaque
     actualizarEstadoEstacion(5, Detenida);  // Envío
-
-    // ELIMINAR: No crear los labels manuales del resumen
-    // estadoGlobal = new QLabel("Estado Global: Inactivo", this);
-    // productosCreados = new QLabel("Productos Creados: 0", this);
-    // productosFinalizados = new QLabel("Productos Finalizados: 0", this);
-    // estacionesActivas = new QLabel("Estaciones Activas: 0", this);
 
     // Inicializar el resumen en txtLog_2
     actualizarTxtLog2();
@@ -578,25 +574,114 @@ int MainWindow::calcularEstacionesActivas() {
     return activas;
 }
 
+int MainWindow::calcularEstacionesPausadas() {
+    int pausadas = 0;
+    if (estadoEstacion1 && estadoEstacion1->text().contains("PAUSADA")) pausadas++;
+    if (estadoEstacion2 && estadoEstacion2->text().contains("PAUSADA")) pausadas++;
+    if (estadoEstacion3 && estadoEstacion3->text().contains("PAUSADA")) pausadas++;
+    if (estadoEstacion4 && estadoEstacion4->text().contains("PAUSADA")) pausadas++;
+    if (estadoEstacion5 && estadoEstacion5->text().contains("PAUSADA")) pausadas++;
+    return pausadas;
+}
+
+int MainWindow::calcularEstacionesDetenidas() {
+    int detenidas = 0;
+    if (estadoEstacion1 && estadoEstacion1->text().contains("DETENIDA")) detenidas++;
+    if (estadoEstacion2 && estadoEstacion2->text().contains("DETENIDA")) detenidas++;
+    if (estadoEstacion3 && estadoEstacion3->text().contains("DETENIDA")) detenidas++;
+    if (estadoEstacion4 && estadoEstacion4->text().contains("DETENIDA")) detenidas++;
+    if (estadoEstacion5 && estadoEstacion5->text().contains("DETENIDA")) detenidas++;
+    return detenidas;
+}
+
+QString MainWindow::calcularTiempoPromedio() {
+    if (ui->tblProcesses->rowCount() == 0) return "0";
+
+    int totalSegundos = 0;
+    int procesosConTiempo = 0;
+
+    for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
+        QString tiempo = ui->tblProcesses->item(row, 3)->text();
+        // Buscar números en la columna de tiempo
+        QRegularExpression re("(\\d+)");
+        QRegularExpressionMatch match = re.match(tiempo);
+        if (match.hasMatch()) {
+            bool ok;
+            int segundos = match.captured(1).toInt(&ok);
+            if (ok && segundos > 0) {
+                totalSegundos += segundos;
+                procesosConTiempo++;
+            }
+        }
+    }
+
+    return procesosConTiempo > 0 ?
+               QString::number(totalSegundos / procesosConTiempo) : "0";
+}
+
+QString MainWindow::generarSugerencia(double eficiencia, int activas, int pausadas) {
+    if (activas == 0 && pausadas == 0) return "▶️ Iniciar sistema de producción";
+    if (eficiencia < 30.0) return "🔧 Revisar cuellos de botella en las estaciones";
+    if (eficiencia < 60.0) return "⚡ Optimizar flujo de producción";
+    if (pausadas > 2) return "▶️ Reactivar estaciones pausadas";
+    if (activas < 3) return "🏭 Considerar activar más estaciones";
+    if (eficiencia > 85.0) return "✅ Rendimiento excelente - Mantener configuración";
+    return "📊 Monitorear rendimiento continuamente";
+}
+
 void MainWindow::actualizarTxtLog2() {
     if (!ui->txtLog_2) return;
 
     int creados = ui->barProductos->value();
     int finalizados = calcularProductosFinalizados();
     int activas = calcularEstacionesActivas();
+    int pausadas = calcularEstacionesPausadas();
+    int detenidas = calcularEstacionesDetenidas();
+    int enProceso = creados - finalizados;
+
+    double eficiencia = 0.0;
+    if (creados > 0) {
+        eficiencia = (finalizados * 100.0) / creados;
+    }
+
+    int porcentajeOcupacion = (activas * 100) / 5;
 
     QString resumen = QString(
-                          "=== RESUMEN DEL SISTEMA ===\n"
-                          "🌐 Estado Global: %1\n"
-                          "📦 Productos Creados: %2\n"
-                          "✅ Productos Finalizados: %3\n"
-                          "🏭 Estaciones Activas: %4/%5\n"
-                          "=========================="
-                          ).arg(activas > 0 ? "🟢 ACTIVO" : "🔴 INACTIVO")
+                          "🏭 SISTEMA DE PRODUCCIÓN - RESUMEN\n"
+                          "📊 ESTADO GENERAL: %1\n"
+
+                          "📈 ESTADÍSTICAS DE PRODUCCIÓN:\n"
+                          "   • Productos creados: %2\n"
+                          "   • Productos finalizados: %3\n"
+                          "   • Productos en proceso: %4\n"
+                          "   • Eficiencia del sistema: %5%\n"
+                          "   • Tiempo promedio: %6 seg\n"
+                          "\n"
+                          "⚙️ ESTADO DE ESTACIONES:\n"
+                          "   • 🟢 Activas: %7/%11\n"
+                          "   • 🟡 Pausadas: %8/%11\n"
+                          "   • 🔴 Detenidas: %9/%11\n"
+                          "   • 🔄 Ocupación: %10%\n"
+                          "\n"
+                          "💡 RECOMENDACIÓN:\n"
+                          "   %12\n"
+
+                          "🕐 Última actualización: %13"
+                          )
+                          .arg(activas > 0 ? "🟢 PRODUCCIÓN ACTIVA" :
+                                   (pausadas > 0 ? "🟡 PRODUCCIÓN PAUSADA" : "🔴 SISTEMA DETENIDO"))
                           .arg(creados)
                           .arg(finalizados)
+                          .arg(enProceso)
+                          .arg(QString::number(eficiencia, 'f', 1))
+                          .arg(calcularTiempoPromedio())
                           .arg(activas)
-                          .arg(5); // Total de estaciones
+                          .arg(pausadas)
+                          .arg(detenidas)
+                          .arg(porcentajeOcupacion)
+                          .arg(5) // Total estaciones
+                          .arg(generarSugerencia(eficiencia, activas, pausadas))
+                          .arg(QDateTime::currentDateTime().toString("hh:mm:ss"));
 
     ui->txtLog_2->setPlainText(resumen);
 }
