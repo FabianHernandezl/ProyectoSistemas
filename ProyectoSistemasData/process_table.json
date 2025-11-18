@@ -2,1587 +2,837 @@
     "events": [
         {
             "productId": 1,
-            "state": "Recibido",
+            "state": "Procesando",
             "station": "Assembly",
-            "time": "12:33:55.023"
+            "time": "14:33:47.605"
         },
         {
             "productId": 1,
-            "state": "Procesando",
+            "state": "Enviado",
             "station": "Assembly",
-            "time": "12:33:55.023"
-        },
-        {
-            "productId": 2,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:33:56.338"
-        },
-        {
-            "productId": 2,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:33:56.338"
-        },
-        {
-            "productId": 1,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:33:56.338"
+            "time": "14:33:48.407"
         },
         {
             "productId": 1,
             "state": "Procesando",
             "station": "Painting",
-            "time": "12:33:56.338"
-        },
-        {
-            "productId": 3,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:33:57.488"
-        },
-        {
-            "productId": 3,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:33:57.488"
-        },
-        {
-            "productId": 2,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:33:57.714"
-        },
-        {
-            "productId": 2,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:33:57.714"
+            "time": "14:33:48.407"
         },
         {
             "productId": 1,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:33:57.714"
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:33:49.209"
         },
         {
             "productId": 1,
             "state": "Procesando",
             "station": "Inspection",
-            "time": "12:33:57.714"
-        },
-        {
-            "productId": 4,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:33:58.280"
-        },
-        {
-            "productId": 4,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:33:58.280"
-        },
-        {
-            "productId": 3,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:33:58.371"
-        },
-        {
-            "productId": 3,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:33:58.371"
-        },
-        {
-            "productId": 2,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:33:58.707"
+            "time": "14:33:49.209"
         },
         {
             "productId": 2,
             "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:33:58.707"
+            "station": "Assembly",
+            "time": "14:33:49.523"
         },
         {
             "productId": 1,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:33:58.707"
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:33:50.011"
         },
         {
             "productId": 1,
             "state": "Procesando",
             "station": "Packing",
-            "time": "12:33:58.707"
-        },
-        {
-            "productId": 5,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:33:59.436"
-        },
-        {
-            "productId": 5,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:33:59.436"
-        },
-        {
-            "productId": 4,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:33:59.436"
-        },
-        {
-            "productId": 4,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:33:59.436"
-        },
-        {
-            "productId": 3,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:33:59.615"
-        },
-        {
-            "productId": 3,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:33:59.615"
+            "time": "14:33:50.011"
         },
         {
             "productId": 2,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:33:59.869"
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:33:50.325"
         },
         {
             "productId": 2,
             "state": "Procesando",
-            "station": "Packing",
-            "time": "12:33:59.869"
+            "station": "Painting",
+            "time": "14:33:50.325"
         },
         {
             "productId": 1,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:33:59.869"
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:33:50.814"
         },
         {
             "productId": 1,
             "state": "Procesando",
             "station": "Shipping",
-            "time": "12:33:59.869"
+            "time": "14:33:50.814"
         },
         {
-            "productId": 6,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:00.058"
-        },
-        {
-            "productId": 6,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:00.058"
-        },
-        {
-            "productId": 5,
-            "state": "Recibido",
+            "productId": 2,
+            "state": "Enviado",
             "station": "Painting",
-            "time": "12:34:00.624"
+            "time": "14:33:51.136"
         },
         {
-            "productId": 5,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:00.624"
-        },
-        {
-            "productId": 4,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:00.624"
-        },
-        {
-            "productId": 4,
+            "productId": 2,
             "state": "Procesando",
             "station": "Inspection",
-            "time": "12:34:00.624"
-        },
-        {
-            "productId": 3,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:00.852"
+            "time": "14:33:51.136"
         },
         {
             "productId": 3,
             "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:00.852"
-        },
-        {
-            "productId": 7,
-            "state": "Recibido",
             "station": "Assembly",
-            "time": "12:34:01.031"
-        },
-        {
-            "productId": 7,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:01.031"
+            "time": "14:33:51.521"
         },
         {
             "productId": 1,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:01.161"
+            "time": "14:33:51.629"
         },
         {
             "productId": 2,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:01.161"
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:33:51.942"
         },
         {
             "productId": 2,
             "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:01.161"
-        },
-        {
-            "productId": 6,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:01.495"
-        },
-        {
-            "productId": 6,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:01.495"
-        },
-        {
-            "productId": 5,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:01.495"
-        },
-        {
-            "productId": 5,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:01.495"
-        },
-        {
-            "productId": 8,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:01.879"
-        },
-        {
-            "productId": 8,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:01.879"
-        },
-        {
-            "productId": 4,
-            "state": "Recibido",
             "station": "Packing",
-            "time": "12:34:02.097"
+            "time": "14:33:51.942"
+        },
+        {
+            "productId": 3,
+            "state": "Procesando",
+            "station": "Painting",
+            "time": "14:33:52.327"
+        },
+        {
+            "productId": 3,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:33:52.327"
+        },
+        {
+            "productId": 2,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:33:52.744"
+        },
+        {
+            "productId": 2,
+            "state": "Procesando",
+            "station": "Shipping",
+            "time": "14:33:52.744"
+        },
+        {
+            "productId": 3,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:33:53.136"
+        },
+        {
+            "productId": 3,
+            "state": "Procesando",
+            "station": "Inspection",
+            "time": "14:33:53.136"
         },
         {
             "productId": 4,
             "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:02.097"
+            "station": "Assembly",
+            "time": "14:33:53.521"
         },
         {
             "productId": 2,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:02.343"
-        },
-        {
-            "productId": 3,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:02.347"
+            "time": "14:33:53.553"
         },
         {
             "productId": 3,
             "state": "Procesando",
+            "station": "Packing",
+            "time": "14:33:53.939"
+        },
+        {
+            "productId": 3,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:33:53.939"
+        },
+        {
+            "productId": 4,
+            "state": "Procesando",
+            "station": "Painting",
+            "time": "14:33:54.325"
+        },
+        {
+            "productId": 4,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:33:54.326"
+        },
+        {
+            "productId": 3,
+            "state": "Procesando",
             "station": "Shipping",
-            "time": "12:34:02.347"
+            "time": "14:33:54.740"
         },
         {
-            "productId": 7,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:02.432"
-        },
-        {
-            "productId": 7,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:02.432"
-        },
-        {
-            "productId": 6,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:02.521"
-        },
-        {
-            "productId": 6,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:02.521"
-        },
-        {
-            "productId": 5,
-            "state": "Recibido",
+            "productId": 3,
+            "state": "Enviado",
             "station": "Packing",
-            "time": "12:34:02.793"
+            "time": "14:33:54.740"
+        },
+        {
+            "productId": 4,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:33:55.127"
+        },
+        {
+            "productId": 4,
+            "state": "Procesando",
+            "station": "Inspection",
+            "time": "14:33:55.127"
         },
         {
             "productId": 5,
             "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:02.793"
-        },
-        {
-            "productId": 9,
-            "state": "Recibido",
             "station": "Assembly",
-            "time": "12:34:02.997"
-        },
-        {
-            "productId": 9,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:02.997"
+            "time": "14:33:55.522"
         },
         {
             "productId": 3,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:03.081"
+            "time": "14:33:55.545"
         },
         {
             "productId": 4,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:03.081"
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:33:55.930"
         },
         {
             "productId": 4,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:03.081"
-        },
-        {
-            "productId": 6,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:03.743"
-        },
-        {
-            "productId": 6,
             "state": "Procesando",
             "station": "Packing",
-            "time": "12:34:03.743"
-        },
-        {
-            "productId": 8,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:03.764"
-        },
-        {
-            "productId": 8,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:03.764"
-        },
-        {
-            "productId": 7,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:03.767"
-        },
-        {
-            "productId": 7,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:03.767"
-        },
-        {
-            "productId": 4,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:03.914"
-        },
-        {
-            "productId": 5,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:03.917"
+            "time": "14:33:55.930"
         },
         {
             "productId": 5,
             "state": "Procesando",
+            "station": "Painting",
+            "time": "14:33:56.322"
+        },
+        {
+            "productId": 5,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:33:56.322"
+        },
+        {
+            "productId": 4,
+            "state": "Procesando",
             "station": "Shipping",
-            "time": "12:34:03.917"
+            "time": "14:33:56.732"
         },
         {
-            "productId": 10,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:04.207"
+            "productId": 4,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:33:56.732"
         },
         {
-            "productId": 10,
+            "productId": 5,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:33:57.123"
+        },
+        {
+            "productId": 5,
+            "state": "Procesando",
+            "station": "Inspection",
+            "time": "14:33:57.123"
+        },
+        {
+            "productId": 6,
             "state": "Procesando",
             "station": "Assembly",
-            "time": "12:34:04.207"
+            "time": "14:33:57.522"
+        },
+        {
+            "productId": 4,
+            "state": "Finalizado",
+            "station": "Shipping",
+            "time": "14:33:57.535"
+        },
+        {
+            "productId": 5,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:33:57.924"
+        },
+        {
+            "productId": 5,
+            "state": "Procesando",
+            "station": "Packing",
+            "time": "14:33:57.925"
+        },
+        {
+            "productId": 6,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:33:58.323"
+        },
+        {
+            "productId": 6,
+            "state": "Procesando",
+            "station": "Painting",
+            "time": "14:33:58.323"
+        },
+        {
+            "productId": 5,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:33:58.729"
+        },
+        {
+            "productId": 5,
+            "state": "Procesando",
+            "station": "Shipping",
+            "time": "14:33:58.729"
+        },
+        {
+            "productId": 6,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:33:59.124"
+        },
+        {
+            "productId": 6,
+            "state": "Procesando",
+            "station": "Inspection",
+            "time": "14:33:59.124"
         },
         {
             "productId": 7,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:04.762"
-        },
-        {
-            "productId": 7,
             "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:04.762"
+            "station": "Assembly",
+            "time": "14:33:59.526"
         },
         {
             "productId": 5,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:04.812"
-        },
-        {
-            "productId": 6,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:04.812"
+            "time": "14:33:59.550"
         },
         {
             "productId": 6,
             "state": "Procesando",
+            "station": "Packing",
+            "time": "14:33:59.926"
+        },
+        {
+            "productId": 6,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:33:59.926"
+        },
+        {
+            "productId": 7,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:34:00.333"
+        },
+        {
+            "productId": 7,
+            "state": "Procesando",
+            "station": "Painting",
+            "time": "14:34:00.333"
+        },
+        {
+            "productId": 6,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:34:00.737"
+        },
+        {
+            "productId": 6,
+            "state": "Procesando",
             "station": "Shipping",
-            "time": "12:34:04.812"
+            "time": "14:34:00.737"
         },
         {
-            "productId": 9,
-            "state": "Recibido",
+            "productId": 7,
+            "state": "Enviado",
             "station": "Painting",
-            "time": "12:34:04.832"
+            "time": "14:34:01.143"
         },
         {
-            "productId": 9,
+            "productId": 7,
             "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:04.832"
-        },
-        {
-            "productId": 8,
-            "state": "Recibido",
             "station": "Inspection",
-            "time": "12:34:04.832"
+            "time": "14:34:01.143"
         },
         {
             "productId": 8,
             "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:04.832"
+            "station": "Assembly",
+            "time": "14:34:01.536"
         },
         {
             "productId": 6,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:05.434"
-        },
-        {
-            "productId": 11,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:05.608"
-        },
-        {
-            "productId": 11,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:05.608"
-        },
-        {
-            "productId": 10,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:05.611"
-        },
-        {
-            "productId": 10,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:05.611"
-        },
-        {
-            "productId": 7,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:05.727"
+            "time": "14:34:01.539"
         },
         {
             "productId": 7,
             "state": "Procesando",
+            "station": "Packing",
+            "time": "14:34:01.945"
+        },
+        {
+            "productId": 7,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:34:01.945"
+        },
+        {
+            "productId": 8,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:34:02.339"
+        },
+        {
+            "productId": 8,
+            "state": "Procesando",
+            "station": "Painting",
+            "time": "14:34:02.339"
+        },
+        {
+            "productId": 7,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:34:02.750"
+        },
+        {
+            "productId": 7,
+            "state": "Procesando",
             "station": "Shipping",
-            "time": "12:34:05.727"
-        },
-        {
-            "productId": 9,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:06.098"
-        },
-        {
-            "productId": 9,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:06.098"
+            "time": "14:34:02.750"
         },
         {
             "productId": 8,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:06.098"
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:34:03.142"
         },
         {
             "productId": 8,
             "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:06.098"
+            "station": "Inspection",
+            "time": "14:34:03.142"
         },
         {
             "productId": 7,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:06.497"
-        },
-        {
-            "productId": 11,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:06.579"
-        },
-        {
-            "productId": 11,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:06.579"
-        },
-        {
-            "productId": 12,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:06.579"
-        },
-        {
-            "productId": 12,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:06.579"
+            "time": "14:34:03.552"
         },
         {
             "productId": 8,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:06.708"
+            "state": "Procesando",
+            "station": "Packing",
+            "time": "14:34:03.944"
+        },
+        {
+            "productId": 8,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:34:03.944"
+        },
+        {
+            "productId": 8,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:34:04.746"
         },
         {
             "productId": 8,
             "state": "Procesando",
             "station": "Shipping",
-            "time": "12:34:06.708"
+            "time": "14:34:04.747"
         },
         {
-            "productId": 10,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:06.901"
-        },
-        {
-            "productId": 10,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:06.901"
-        },
-        {
-            "productId": 9,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:06.901"
-        },
-        {
-            "productId": 9,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:06.901"
-        },
-        {
-            "productId": 13,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:07.322"
-        },
-        {
-            "productId": 13,
+            "productId": 1,
             "state": "Procesando",
             "station": "Assembly",
-            "time": "12:34:07.322"
+            "time": "14:34:56.524"
         },
         {
-            "productId": 12,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:07.570"
+            "productId": 1,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:34:57.327"
         },
         {
-            "productId": 12,
+            "productId": 1,
             "state": "Procesando",
             "station": "Painting",
-            "time": "12:34:07.570"
+            "time": "14:34:57.327"
         },
         {
-            "productId": 8,
+            "productId": 1,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:34:58.137"
+        },
+        {
+            "productId": 1,
+            "state": "Procesando",
+            "station": "Inspection",
+            "time": "14:34:58.137"
+        },
+        {
+            "productId": 1,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:34:58.938"
+        },
+        {
+            "productId": 1,
+            "state": "Procesando",
+            "station": "Packing",
+            "time": "14:34:58.938"
+        },
+        {
+            "productId": 1,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:34:59.740"
+        },
+        {
+            "productId": 1,
+            "state": "Procesando",
+            "station": "Shipping",
+            "time": "14:34:59.740"
+        },
+        {
+            "productId": 1,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:07.614"
+            "time": "14:35:00.542"
         },
         {
-            "productId": 9,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:07.725"
-        },
-        {
-            "productId": 9,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:07.725"
-        },
-        {
-            "productId": 11,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:07.744"
-        },
-        {
-            "productId": 11,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:07.744"
-        },
-        {
-            "productId": 10,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:07.744"
-        },
-        {
-            "productId": 10,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:07.744"
-        },
-        {
-            "productId": 14,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:08.553"
-        },
-        {
-            "productId": 14,
+            "productId": 2,
             "state": "Procesando",
             "station": "Assembly",
-            "time": "12:34:08.553"
+            "time": "14:35:01.521"
         },
         {
-            "productId": 13,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:08.553"
-        },
-        {
-            "productId": 13,
+            "productId": 2,
             "state": "Procesando",
             "station": "Painting",
-            "time": "12:34:08.553"
+            "time": "14:35:02.322"
         },
         {
-            "productId": 12,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:08.771"
+            "productId": 2,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:35:02.322"
         },
         {
-            "productId": 12,
+            "productId": 2,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:35:03.123"
+        },
+        {
+            "productId": 2,
             "state": "Procesando",
             "station": "Inspection",
-            "time": "12:34:08.771"
+            "time": "14:35:03.123"
         },
         {
-            "productId": 11,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:08.905"
+            "productId": 2,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:35:03.933"
         },
         {
-            "productId": 11,
+            "productId": 2,
             "state": "Procesando",
             "station": "Packing",
-            "time": "12:34:08.905"
+            "time": "14:35:03.933"
         },
         {
-            "productId": 9,
+            "productId": 2,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:35:04.739"
+        },
+        {
+            "productId": 2,
+            "state": "Procesando",
+            "station": "Shipping",
+            "time": "14:35:04.739"
+        },
+        {
+            "productId": 2,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:08.999"
+            "time": "14:35:05.558"
         },
         {
-            "productId": 10,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:08.999"
-        },
-        {
-            "productId": 10,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:08.999"
-        },
-        {
-            "productId": 13,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:09.506"
-        },
-        {
-            "productId": 13,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:09.506"
-        },
-        {
-            "productId": 12,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:09.522"
-        },
-        {
-            "productId": 12,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:09.522"
-        },
-        {
-            "productId": 15,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:09.798"
-        },
-        {
-            "productId": 15,
+            "productId": 3,
             "state": "Procesando",
             "station": "Assembly",
-            "time": "12:34:09.798"
+            "time": "14:35:06.525"
         },
         {
-            "productId": 14,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:09.798"
+            "productId": 3,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:35:07.326"
         },
         {
-            "productId": 14,
+            "productId": 3,
             "state": "Procesando",
             "station": "Painting",
-            "time": "12:34:09.798"
+            "time": "14:35:07.326"
         },
         {
-            "productId": 10,
+            "productId": 3,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:35:08.128"
+        },
+        {
+            "productId": 3,
+            "state": "Procesando",
+            "station": "Inspection",
+            "time": "14:35:08.128"
+        },
+        {
+            "productId": 3,
+            "state": "Procesando",
+            "station": "Packing",
+            "time": "14:35:08.931"
+        },
+        {
+            "productId": 3,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:35:08.931"
+        },
+        {
+            "productId": 3,
+            "state": "Procesando",
+            "station": "Shipping",
+            "time": "14:35:09.732"
+        },
+        {
+            "productId": 3,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:35:09.732"
+        },
+        {
+            "productId": 3,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:10.045"
+            "time": "14:35:10.533"
         },
         {
-            "productId": 11,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:10.045"
-        },
-        {
-            "productId": 11,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:10.045"
-        },
-        {
-            "productId": 16,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:10.408"
-        },
-        {
-            "productId": 16,
+            "productId": 4,
             "state": "Procesando",
             "station": "Assembly",
-            "time": "12:34:10.408"
+            "time": "14:35:11.524"
         },
         {
-            "productId": 13,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:10.553"
+            "productId": 4,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:35:12.330"
         },
         {
-            "productId": 13,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:10.553"
-        },
-        {
-            "productId": 14,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:11.181"
-        },
-        {
-            "productId": 14,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:11.181"
-        },
-        {
-            "productId": 15,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:11.181"
-        },
-        {
-            "productId": 15,
+            "productId": 4,
             "state": "Procesando",
             "station": "Painting",
-            "time": "12:34:11.181"
+            "time": "14:35:12.330"
         },
         {
-            "productId": 11,
+            "productId": 4,
+            "state": "Procesando",
+            "station": "Inspection",
+            "time": "14:35:13.131"
+        },
+        {
+            "productId": 4,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:35:13.131"
+        },
+        {
+            "productId": 4,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:35:13.931"
+        },
+        {
+            "productId": 4,
+            "state": "Procesando",
+            "station": "Packing",
+            "time": "14:35:13.931"
+        },
+        {
+            "productId": 4,
+            "state": "Procesando",
+            "station": "Shipping",
+            "time": "14:35:14.733"
+        },
+        {
+            "productId": 4,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:35:14.733"
+        },
+        {
+            "productId": 4,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:11.259"
+            "time": "14:35:15.533"
         },
         {
-            "productId": 12,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:11.259"
-        },
-        {
-            "productId": 12,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:11.259"
-        },
-        {
-            "productId": 17,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:11.290"
-        },
-        {
-            "productId": 17,
+            "productId": 5,
             "state": "Procesando",
             "station": "Assembly",
-            "time": "12:34:11.290"
+            "time": "14:35:16.523"
         },
         {
-            "productId": 16,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:12.306"
+            "productId": 5,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:35:17.325"
         },
         {
-            "productId": 16,
+            "productId": 5,
             "state": "Procesando",
             "station": "Painting",
-            "time": "12:34:12.306"
+            "time": "14:35:17.325"
         },
         {
-            "productId": 14,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:12.444"
+            "productId": 5,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:35:18.127"
         },
         {
-            "productId": 14,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:12.444"
-        },
-        {
-            "productId": 15,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:12.444"
-        },
-        {
-            "productId": 15,
+            "productId": 5,
             "state": "Procesando",
             "station": "Inspection",
-            "time": "12:34:12.445"
+            "time": "14:35:18.127"
         },
         {
-            "productId": 12,
+            "productId": 5,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:35:18.929"
+        },
+        {
+            "productId": 5,
+            "state": "Procesando",
+            "station": "Packing",
+            "time": "14:35:18.929"
+        },
+        {
+            "productId": 5,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:35:19.732"
+        },
+        {
+            "productId": 5,
+            "state": "Procesando",
+            "station": "Shipping",
+            "time": "14:35:19.732"
+        },
+        {
+            "productId": 5,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:12.552"
+            "time": "14:35:20.536"
         },
         {
-            "productId": 13,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:12.555"
-        },
-        {
-            "productId": 13,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:12.555"
-        },
-        {
-            "productId": 18,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:12.578"
-        },
-        {
-            "productId": 18,
+            "productId": 6,
             "state": "Procesando",
             "station": "Assembly",
-            "time": "12:34:12.578"
+            "time": "14:35:21.522"
         },
         {
-            "productId": 17,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:13.060"
+            "productId": 6,
+            "state": "Enviado",
+            "station": "Assembly",
+            "time": "14:35:22.324"
         },
         {
-            "productId": 17,
+            "productId": 6,
             "state": "Procesando",
             "station": "Painting",
-            "time": "12:34:13.060"
+            "time": "14:35:22.324"
         },
         {
-            "productId": 16,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:13.339"
+            "productId": 6,
+            "state": "Enviado",
+            "station": "Painting",
+            "time": "14:35:23.125"
         },
         {
-            "productId": 16,
+            "productId": 6,
             "state": "Procesando",
             "station": "Inspection",
-            "time": "12:34:13.339"
+            "time": "14:35:23.125"
         },
         {
-            "productId": 19,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:13.404"
+            "productId": 6,
+            "state": "Enviado",
+            "station": "Inspection",
+            "time": "14:35:23.927"
         },
         {
-            "productId": 19,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:13.404"
-        },
-        {
-            "productId": 15,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:13.640"
-        },
-        {
-            "productId": 15,
+            "productId": 6,
             "state": "Procesando",
             "station": "Packing",
-            "time": "12:34:13.640"
+            "time": "14:35:23.927"
         },
         {
-            "productId": 13,
+            "productId": 6,
+            "state": "Procesando",
+            "station": "Shipping",
+            "time": "14:35:24.729"
+        },
+        {
+            "productId": 6,
+            "state": "Enviado",
+            "station": "Packing",
+            "time": "14:35:24.729"
+        },
+        {
+            "productId": 6,
             "state": "Finalizado",
             "station": "Shipping",
-            "time": "12:34:13.903"
-        },
-        {
-            "productId": 14,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:13.907"
-        },
-        {
-            "productId": 14,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:13.907"
-        },
-        {
-            "productId": 18,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:14.180"
-        },
-        {
-            "productId": 18,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:14.180"
-        },
-        {
-            "productId": 20,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:14.210"
-        },
-        {
-            "productId": 20,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:14.210"
-        },
-        {
-            "productId": 17,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:14.445"
-        },
-        {
-            "productId": 17,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:14.445"
-        },
-        {
-            "productId": 16,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:14.796"
-        },
-        {
-            "productId": 16,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:14.796"
-        },
-        {
-            "productId": 21,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:14.844"
-        },
-        {
-            "productId": 21,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:14.844"
-        },
-        {
-            "productId": 14,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:15.205"
-        },
-        {
-            "productId": 15,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:15.205"
-        },
-        {
-            "productId": 15,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:15.205"
-        },
-        {
-            "productId": 19,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:15.540"
-        },
-        {
-            "productId": 19,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:15.540"
-        },
-        {
-            "productId": 18,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:15.821"
-        },
-        {
-            "productId": 18,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:15.821"
-        },
-        {
-            "productId": 17,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:15.821"
-        },
-        {
-            "productId": 17,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:15.821"
-        },
-        {
-            "productId": 15,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:15.928"
-        },
-        {
-            "productId": 16,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:15.931"
-        },
-        {
-            "productId": 16,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:15.931"
-        },
-        {
-            "productId": 22,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:15.959"
-        },
-        {
-            "productId": 22,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:15.959"
-        },
-        {
-            "productId": 20,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:16.149"
-        },
-        {
-            "productId": 20,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:16.149"
-        },
-        {
-            "productId": 23,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:16.833"
-        },
-        {
-            "productId": 23,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:16.833"
-        },
-        {
-            "productId": 21,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:16.925"
-        },
-        {
-            "productId": 21,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:16.925"
-        },
-        {
-            "productId": 19,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:17.064"
-        },
-        {
-            "productId": 19,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:17.064"
-        },
-        {
-            "productId": 18,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:17.121"
-        },
-        {
-            "productId": 18,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:17.121"
-        },
-        {
-            "productId": 16,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:17.209"
-        },
-        {
-            "productId": 17,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:17.209"
-        },
-        {
-            "productId": 17,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:17.209"
-        },
-        {
-            "productId": 24,
-            "state": "Recibido",
-            "station": "Assembly",
-            "time": "12:34:17.625"
-        },
-        {
-            "productId": 24,
-            "state": "Procesando",
-            "station": "Assembly",
-            "time": "12:34:17.625"
-        },
-        {
-            "productId": 20,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:17.818"
-        },
-        {
-            "productId": 20,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:17.818"
-        },
-        {
-            "productId": 22,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:18.064"
-        },
-        {
-            "productId": 22,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:18.064"
-        },
-        {
-            "productId": 19,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:18.376"
-        },
-        {
-            "productId": 19,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:18.376"
-        },
-        {
-            "productId": 17,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:18.405"
-        },
-        {
-            "productId": 18,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:18.405"
-        },
-        {
-            "productId": 18,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:18.405"
-        },
-        {
-            "productId": 21,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:18.839"
-        },
-        {
-            "productId": 21,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:18.839"
-        },
-        {
-            "productId": 23,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:19.027"
-        },
-        {
-            "productId": 23,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:19.027"
-        },
-        {
-            "productId": 20,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:19.038"
-        },
-        {
-            "productId": 20,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:19.038"
-        },
-        {
-            "productId": 18,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:19.195"
-        },
-        {
-            "productId": 19,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:19.201"
-        },
-        {
-            "productId": 19,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:19.201"
-        },
-        {
-            "productId": 19,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:19.864"
-        },
-        {
-            "productId": 22,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:19.984"
-        },
-        {
-            "productId": 22,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:19.984"
-        },
-        {
-            "productId": 21,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:20.119"
-        },
-        {
-            "productId": 21,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:20.119"
-        },
-        {
-            "productId": 20,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:20.121"
-        },
-        {
-            "productId": 20,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:20.121"
-        },
-        {
-            "productId": 24,
-            "state": "Recibido",
-            "station": "Painting",
-            "time": "12:34:20.155"
-        },
-        {
-            "productId": 24,
-            "state": "Procesando",
-            "station": "Painting",
-            "time": "12:34:20.155"
-        },
-        {
-            "productId": 23,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:20.748"
-        },
-        {
-            "productId": 23,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:20.748"
-        },
-        {
-            "productId": 22,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:21.124"
-        },
-        {
-            "productId": 22,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:21.124"
-        },
-        {
-            "productId": 20,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:21.329"
-        },
-        {
-            "productId": 21,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:21.329"
-        },
-        {
-            "productId": 21,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:21.329"
-        },
-        {
-            "productId": 24,
-            "state": "Recibido",
-            "station": "Inspection",
-            "time": "12:34:21.407"
-        },
-        {
-            "productId": 24,
-            "state": "Procesando",
-            "station": "Inspection",
-            "time": "12:34:21.407"
-        },
-        {
-            "productId": 21,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:21.932"
-        },
-        {
-            "productId": 23,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:22.197"
-        },
-        {
-            "productId": 23,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:22.197"
-        },
-        {
-            "productId": 22,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:22.200"
-        },
-        {
-            "productId": 22,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:22.200"
-        },
-        {
-            "productId": 22,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:23.291"
-        },
-        {
-            "productId": 24,
-            "state": "Recibido",
-            "station": "Packing",
-            "time": "12:34:23.513"
-        },
-        {
-            "productId": 24,
-            "state": "Procesando",
-            "station": "Packing",
-            "time": "12:34:23.513"
-        },
-        {
-            "productId": 23,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:23.515"
-        },
-        {
-            "productId": 23,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:23.515"
-        },
-        {
-            "productId": 23,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:24.576"
-        },
-        {
-            "productId": 24,
-            "state": "Recibido",
-            "station": "Shipping",
-            "time": "12:34:24.877"
-        },
-        {
-            "productId": 24,
-            "state": "Procesando",
-            "station": "Shipping",
-            "time": "12:34:24.877"
-        },
-        {
-            "productId": 24,
-            "state": "Finalizado",
-            "station": "Shipping",
-            "time": "12:34:26.038"
+            "time": "14:35:25.534"
         }
     ]
 }

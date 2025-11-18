@@ -134,6 +134,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, [this](const QString &station, int productId, const QString &state, const QString &time){
                 onProcessEvent(station, productId, state, time);
 
+
+
                 // ACTUALIZACIÓN CRÍTICA: Actualizar estado basado en evento
                 actualizarEstadoDesdeEvento(station, state);
 
@@ -745,7 +747,17 @@ void MainWindow::onProcessEvent(const QString &station, int productId, const QSt
     ui->tblProcesses->setItem(row, 2, new QTableWidgetItem(state));
     ui->tblProcesses->setItem(row, 3, new QTableWidgetItem(time));
 
+    QJsonObject newEvent;
+    newEvent["station"] = station;
+    newEvent["productId"] = productId;
+    newEvent["state"] = state;
+    newEvent["time"] = time;
+
+    currentRows_.append(newEvent);
+    PersistenceManager::saveEvents(currentRows_);
+
     actualizarTxtLog2();
+
 }
 
 void MainWindow::clearAllProduction()

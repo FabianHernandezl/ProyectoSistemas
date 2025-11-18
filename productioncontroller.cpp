@@ -110,7 +110,7 @@ void ProductionController::startProduction()
         });
     }
 
-    productTimer_->start(800);
+    productTimer_->start(5000);
 }
 
 // =======================
