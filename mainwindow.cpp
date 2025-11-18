@@ -21,6 +21,29 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // CORREGIR: Usar los nombres EXACTOS de tu .ui file
+    estadoEstacion1 = ui->lblAssemblyLight;      // Ensamblaje
+    estadoEstacion2 = ui->lblPaintingLight;      // Pintura
+    estadoEstacion3 = ui->lblInspectionLight;    // Inspección
+    estadoEstacion4 = ui->lblPackingLight;       // Empaque
+    estadoEstacion5 = ui->lblShippingLight;      // Envío
+
+    // Configurar estados iniciales para las 5 estaciones
+    actualizarEstadoEstacion(1, Detenida);  // Ensamblaje
+    actualizarEstadoEstacion(2, Detenida);  // Pintura
+    actualizarEstadoEstacion(3, Detenida);  // Inspección
+    actualizarEstadoEstacion(4, Detenida);  // Empaque
+    actualizarEstadoEstacion(5, Detenida);  // Envío
+
+    // ELIMINAR: No crear los labels manuales del resumen
+    // estadoGlobal = new QLabel("Estado Global: Inactivo", this);
+    // productosCreados = new QLabel("Productos Creados: 0", this);
+    // productosFinalizados = new QLabel("Productos Finalizados: 0", this);
+    // estacionesActivas = new QLabel("Estaciones Activas: 0", this);
+
+    // Inicializar el resumen en txtLog_2
+    actualizarTxtLog2();
+
     //
     // -------------------------
     //  CARGA DE IMÁGENES
@@ -89,22 +112,38 @@ MainWindow::MainWindow(QWidget *parent)
 
     //
     // -------------------------
-    //  ESTADÍSTICAS
+    //  ESTADÍSTICAS - CONEXIONES MEJORADAS
     // -------------------------
     //
     connect(&controller_, &ProductionController::updateProcessedCount,
-            this, &MainWindow::updateProcessedCount);
+            this, [this](int count){
+                updateProcessedCount(count);
+                // Actualizar el resumen cuando cambien los productos creados
+                actualizarTxtLog2();
+            });
 
     connect(&controller_, &ProductionController::updateActiveWorkers,
-            this, &MainWindow::updateActiveWorkers);
+            this, [this](int count){
+                updateActiveWorkers(count);
+                // Actualizar el resumen cuando cambien los trabajadores activos
+                actualizarTxtLog2();
+            });
 
     //
     // -------------------------
-    //  EVENTOS DE ESTACIÓN
+    //  EVENTOS DE ESTACIÓN - CONEXIÓN MEJORADA
     // -------------------------
     //
     connect(&controller_, &ProductionController::processEvent,
-            this, &MainWindow::onProcessEvent);
+            this, [this](const QString &station, int productId, const QString &state, const QString &time){
+                onProcessEvent(station, productId, state, time);
+
+                // ACTUALIZACIÓN CRÍTICA: Actualizar estado basado en evento
+                actualizarEstadoDesdeEvento(station, state);
+
+                // Actualizar resumen después de cada evento
+                actualizarTxtLog2();
+            });
 
     //
     // -------------------------
@@ -193,7 +232,6 @@ QPushButton:pressed {
 }
 )";
     qApp->setStyleSheet(qApp->styleSheet() + msgBoxStyle);
-
 }
 
 
@@ -282,6 +320,12 @@ void MainWindow::on_btnStart_clicked()
     if (menu.clickedButton() == btnStartProduction) {
         controller_.startProduction();
         animationManager_.startAnimations();
+
+        // ACTUALIZACIÓN CRÍTICA: Forzar actualización de estados cuando inicia producción
+        for (int i = 1; i <= 5; i++) {
+            actualizarEstadoEstacion(i, Activa);
+        }
+        actualizarTxtLog2();
     }
     else if (menu.clickedButton() == btnStartAnimations) {
         animationManager_.startAnimations();
@@ -324,6 +368,12 @@ void MainWindow::on_btnPause_clicked()
     if (menu.clickedButton() == btnPauseAll) {
         controller_.pauseProduction();
         animationManager_.stopAnimations();
+
+        // ACTUALIZACIÓN CRÍTICA: Forzar actualización de estados cuando se pausa
+        for (int i = 1; i <= 5; i++) {
+            actualizarEstadoEstacion(i, Pausada);
+        }
+        actualizarTxtLog2();
     }
     else if (menu.clickedButton() == btnPauseAnimations) {
         animationManager_.stopAnimations();
@@ -400,6 +450,12 @@ void MainWindow::on_btnDelete_clicked()
     }
     else if (menu.clickedButton() == btnStopAll) {
         controller_.stopAllStations();
+
+        // ACTUALIZACIÓN: Forzar actualización cuando se detienen todas las estaciones
+        for (int i = 1; i <= 5; i++) {
+            actualizarEstadoEstacion(i, Detenida);
+        }
+        actualizarTxtLog2();
     }
 
 }
@@ -452,10 +508,149 @@ void MainWindow::updateActiveWorkers(int v)
     ui->barRecursos->setValue(v);
 }
 
-void MainWindow::onProcessEvent(const QString &station,
-                                int productId,
-                                const QString &state,
-                                const QString &time)
+// Método para actualizar el estado de las estaciones
+void MainWindow::actualizarEstadoEstacion(int estacion, Estado estado)
+{
+    QLabel *estadoLabel = nullptr;
+    QString texto;
+
+    switch (estacion) {
+    case 1:
+        estadoLabel = estadoEstacion1;  // Ensamblaje
+        break;
+    case 2:
+        estadoLabel = estadoEstacion2;  // Pintura
+        break;
+    case 3:
+        estadoLabel = estadoEstacion3;  // Inspección
+        break;
+    case 4:
+        estadoLabel = estadoEstacion4;  // Empaque
+        break;
+    case 5:
+        estadoLabel = estadoEstacion5;  // Envío
+        break;
+    default:
+        return;
+    }
+
+    if (!estadoLabel) return;
+
+    switch (estado) {
+    case Activa:
+        estadoLabel->setStyleSheet("background-color: green; color: white; padding: 8px; border-radius: 8px; font-weight: bold;");
+        texto = "🟢 ACTIVA";
+        break;
+    case Pausada:
+        estadoLabel->setStyleSheet("background-color: #FFA500; color: black; padding: 8px; border-radius: 8px; font-weight: bold;");
+        texto = "🟡 PAUSADA";
+        break;
+    case Detenida:
+        estadoLabel->setStyleSheet("background-color: red; color: white; padding: 8px; border-radius: 8px; font-weight: bold;");
+        texto = "🔴 DETENIDA";
+        break;
+    }
+
+    estadoLabel->setText(texto);
+    estadoLabel->setAlignment(Qt::AlignCenter);
+}
+
+// Métodos auxiliares para calcular estadísticas
+int MainWindow::calcularProductosFinalizados() {
+    int finalizados = 0;
+    for (int row = 0; row < ui->tblProcesses->rowCount(); ++row) {
+        QString estado = ui->tblProcesses->item(row, 2)->text();
+        if (estado == "Finalizado" || estado == "Completado") {
+            finalizados++;
+        }
+    }
+    return finalizados;
+}
+
+int MainWindow::calcularEstacionesActivas() {
+    // Contar cuántas estaciones tienen estado "Activa" en los labels
+    int activas = 0;
+    if (estadoEstacion1 && estadoEstacion1->text().contains("ACTIVA")) activas++;
+    if (estadoEstacion2 && estadoEstacion2->text().contains("ACTIVA")) activas++;
+    if (estadoEstacion3 && estadoEstacion3->text().contains("ACTIVA")) activas++;
+    if (estadoEstacion4 && estadoEstacion4->text().contains("ACTIVA")) activas++;
+    if (estadoEstacion5 && estadoEstacion5->text().contains("ACTIVA")) activas++;
+    return activas;
+}
+
+void MainWindow::actualizarTxtLog2() {
+    if (!ui->txtLog_2) return;
+
+    int creados = ui->barProductos->value();
+    int finalizados = calcularProductosFinalizados();
+    int activas = calcularEstacionesActivas();
+
+    QString resumen = QString(
+                          "=== RESUMEN DEL SISTEMA ===\n"
+                          "🌐 Estado Global: %1\n"
+                          "📦 Productos Creados: %2\n"
+                          "✅ Productos Finalizados: %3\n"
+                          "🏭 Estaciones Activas: %4/%5\n"
+                          "=========================="
+                          ).arg(activas > 0 ? "🟢 ACTIVO" : "🔴 INACTIVO")
+                          .arg(creados)
+                          .arg(finalizados)
+                          .arg(activas)
+                          .arg(5); // Total de estaciones
+
+    ui->txtLog_2->setPlainText(resumen);
+}
+
+void MainWindow::actualizarEstadoDesdeEvento(const QString &station, const QString &state) {
+    Estado nuevoEstado = Detenida;
+
+    // MEJORADO: Detección más robusta de estados
+    if (state.contains("Iniciado", Qt::CaseInsensitive) ||
+        state.contains("Procesando", Qt::CaseInsensitive) ||
+        state.contains("Working", Qt::CaseInsensitive) ||
+        state.contains("Active", Qt::CaseInsensitive) ||
+        state == "Inicio") {
+        nuevoEstado = Activa;
+    } else if (state.contains("Pausado", Qt::CaseInsensitive) ||
+               state.contains("Pausa", Qt::CaseInsensitive) ||
+               state.contains("Paused", Qt::CaseInsensitive)) {
+        nuevoEstado = Pausada;
+    } else if (state.contains("Detenido", Qt::CaseInsensitive) ||
+               state.contains("Finalizado", Qt::CaseInsensitive) ||
+               state.contains("Completado", Qt::CaseInsensitive) ||
+               state.contains("Stopped", Qt::CaseInsensitive) ||
+               state.contains("Finished", Qt::CaseInsensitive)) {
+        nuevoEstado = Detenida;
+    }
+
+    qDebug() << "Actualizando estado desde evento - Estación:" << station << "Estado:" << state << "->" << nuevoEstado;
+
+    // MEJORADO: Mapeo más robusto de nombres de estación
+    if (station.contains("Ensamblaje", Qt::CaseInsensitive) ||
+        station.contains("Assembly", Qt::CaseInsensitive) ||
+        station == "Estación 1" || station == "Station 1") {
+        actualizarEstadoEstacion(1, nuevoEstado);
+    } else if (station.contains("Pintura", Qt::CaseInsensitive) ||
+               station.contains("Painting", Qt::CaseInsensitive) ||
+               station == "Estación 2" || station == "Station 2") {
+        actualizarEstadoEstacion(2, nuevoEstado);
+    } else if (station.contains("Inspección", Qt::CaseInsensitive) ||
+               station.contains("Inspection", Qt::CaseInsensitive) ||
+               station == "Estación 3" || station == "Station 3") {
+        actualizarEstadoEstacion(3, nuevoEstado);
+    } else if (station.contains("Empaque", Qt::CaseInsensitive) ||
+               station.contains("Packing", Qt::CaseInsensitive) ||
+               station == "Estación 4" || station == "Station 4") {
+        actualizarEstadoEstacion(4, nuevoEstado);
+    } else if (station.contains("Envío", Qt::CaseInsensitive) ||
+               station.contains("Shipping", Qt::CaseInsensitive) ||
+               station == "Estación 5" || station == "Station 5") {
+        actualizarEstadoEstacion(5, nuevoEstado);
+    }
+}
+
+// Manejo de eventos de la estación
+void MainWindow::onProcessEvent(const QString &station, int productId, const QString &state, const QString &time)
 {
     int row = ui->tblProcesses->rowCount();
     ui->tblProcesses->insertRow(row);
@@ -465,16 +660,7 @@ void MainWindow::onProcessEvent(const QString &station,
     ui->tblProcesses->setItem(row, 2, new QTableWidgetItem(state));
     ui->tblProcesses->setItem(row, 3, new QTableWidgetItem(time));
 
-    ui->tblProcesses->scrollToBottom();
-
-    QJsonObject obj;
-    obj["station"] = station;
-    obj["productId"] = productId;
-    obj["state"] = state;
-    obj["time"] = time;
-
-    currentRows_.append(obj);
-    PersistenceManager::saveTable(currentRows_);
+    actualizarTxtLog2();
 }
 
 void MainWindow::clearAllProduction()
@@ -486,6 +672,13 @@ void MainWindow::clearAllProduction()
 
     currentRows_ = QJsonArray();
     PersistenceManager::saveTable(currentRows_);
+
+    // Resetear estados de todas las estaciones
+    for (int i = 1; i <= 5; i++) {
+        actualizarEstadoEstacion(i, Detenida);
+    }
+
+    actualizarTxtLog2();
 
     QMessageBox::information(this, "Producción eliminada",
                              "Toda la producción ha sido eliminada.");

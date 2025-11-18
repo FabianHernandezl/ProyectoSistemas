@@ -10,6 +10,7 @@
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <QLabel>
 
 #include "productioncontroller.h"
 #include "animationmanager.h"
@@ -19,6 +20,13 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+// Enum para los estados de la estación
+enum Estado {
+    Activa,    // Estado activo
+    Pausada,   // Estado pausado
+    Detenida   // Estado detenido
+};
 
 class MainWindow : public QMainWindow
 {
@@ -82,6 +90,28 @@ private:
 
     // Posición de la caja animada
     QPoint animPosition_;
+
+    // --- Indicadores de estado ---
+    QLabel *estadoEstacion1;  // Indicador de la estación 1
+    QLabel *estadoEstacion2;  // Indicador de la estación 2
+    QLabel *estadoEstacion3;  // Indicador de la estación 3
+    QLabel *estadoEstacion4;  // NUEVO - Indicador de la estación 4 (Empaque)
+    QLabel *estadoEstacion5;  // NUEVO - Indicador de la estación 5 (Envío)
+
+    QLabel *estadoGlobal;     // Estado global
+    QLabel *productosCreados; // Productos creados
+    QLabel *productosFinalizados; // Productos finalizados
+    QLabel *estacionesActivas; // Estaciones activas
+
+    // --- Métodos para actualizar los indicadores ---
+    void actualizarEstadoEstacion(int estacion, Estado estado);
+    void actualizarResumen(int productosCreadosValor, int productosFinalizadosValor, int estacionesActivasValor);
+
+    // --- NUEVOS MÉTODOS PARA EL RESUMEN ---
+    int calcularProductosFinalizados();
+    int calcularEstacionesActivas();
+    void actualizarTxtLog2();
+    void actualizarEstadoDesdeEvento(const QString &station, const QString &state);
 };
 
 #endif // MAINWINDOW_H
